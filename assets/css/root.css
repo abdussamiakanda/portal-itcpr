@@ -1,0 +1,34 @@
+:root {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  padding: 0px;
+  margin: 0px;
+}
+a {
+  text-decoration: none;
+  color: var(--color2rgba1);
+}
+a:hover {
+  color: var(--color2rgba07);
+}
+a:visited {
+  text-decoration: none;
+}
+input,select{
+  font-family: 'Poppins', sans-serif;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.hide {
+  display: none;
+}

@@ -1,0 +1,25 @@
+@media screen and (min-width: 40em) {
+  #footer {
+    background-color: rgb(48, 48, 48);
+    color: white;
+    padding: 10px 0px;
+  }
+  #footer p {
+    margin: 20px 0px;
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 0em) and (max-width: 40em) {
+  #footer {
+    background-color: rgb(48, 48, 48);
+    color: white;
+    padding: 10px 0px;
+  }
+  #footer p {
+    margin: 10px 0px;
+    text-align: center;
+  }
+}
+
+

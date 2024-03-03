@@ -1,0 +1,247 @@
+@media screen and (min-width: 40em) {
+  html {
+    width: 100%;
+    margin: 0px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll;
+  }
+  body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px auto;
+    position: relative;
+  }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* MENU CSS */
+
+  .menu {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+  }
+  .menu .menu-top {
+    color: white;
+    background-color: rgb(80, 80, 80);
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .menu .menu-top div {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  .menu .menu-top div:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  .menu .menu-top .bar {
+    padding: 15px 0px;
+    border: 1px solid white;
+    cursor:auto;
+  }
+
+  .menu .menu-bar {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .menu .icon {
+    color: rgb(157, 157, 189);
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 35px;
+    font-weight: bold;
+    padding: 0px 20px;
+  }
+  .menu .icon:hover {
+    color: black;
+  }
+  
+
+  .pc-menu {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pc-menu .menu-item {
+    padding: 15px 30px;
+    cursor: pointer;
+    position: relative;
+  }
+  .pc-menu .menu-item:hover {
+    color: white;
+    background-color: rgb(157, 157, 189);
+  }
+  .about-items {
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 60px;
+    color: black;
+    background-color: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+  }
+  .about:hover .about-items {
+    display: block;
+  }
+  .research-items {
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 60px;
+    color: black;
+    background-color: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+  }
+  .research:hover .research-items {
+    display: block;
+  }
+  .pc-menu .menu-item div div {
+    cursor: pointer;
+    padding: 8px 20px;
+  }
+  .pc-menu .menu-item div div:hover {
+    color: white;
+    background-color: rgb(157, 157, 189);
+  }
+
+  
+  #headerbtn, .bars, .moblie-menu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 0em) and (max-width: 40em) {
+  html {
+    width: 100%;
+    margin: 0px;
+    user-select: none;
+    -moz-user-select: none;
+  }
+  body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px auto;
+    position: relative;
+  }
+
+  /* MENU CSS */
+  .menu {
+    position: fixed;
+    max-width: 100vw;
+    width: 100%;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+  }
+  .menu .menu-top {
+    color: white;
+    background-color: rgb(80, 80, 80);
+    font-size: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .menu .menu-top div {
+    padding: 0px 8px;
+    cursor: pointer;
+  }
+  .menu .menu-top div:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  .menu .menu-top .bar {
+    padding: 10px 0px;
+    border: 1px solid white;
+    cursor:auto;
+  }
+  .menu .menu-bar {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu .icon {
+    color: rgb(157, 157, 189);
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 0px 8px;
+  }
+  .menu .icon:hover {
+    color: black;
+  }
+
+  .pc-menu {
+    display: none;
+  }
+
+  .bars {
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .moblie-menu {
+    position: fixed;
+    top: -1000px;
+    left: 0px;
+    width: 100%;
+    height: 110vh;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.95);
+    color: white;
+    padding: 10px;
+    padding-top: 80px;
+    z-index: 50;
+    transition-duration: 0.5s;
+  }
+  .moblie-menu .menu-item {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2px 10px;
+    border-radius: 5px;
+    width: 250px;
+    margin-bottom: 5px;
+  }
+  .moblie-menu .menu-item1 {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2px 10px;
+    border-radius: 5px;
+    width: 220px;
+    margin-left: 30px;
+    margin-bottom: 5px;
+  }
+  .cross {
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .pc-menu {
+    display: none;
+  }
+}

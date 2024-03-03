@@ -1,0 +1,17 @@
+@media screen and (min-width: 40em) {
+  .top{
+    padding: 50px;
+  }
+  .academic1 {
+    background-color: white;
+    padding: 50px 35px;
+    max-width: 1200px;
+    margin: 0px auto;
+  }
+
+
+
+}
+
+@media screen and (min-width: 0em) and (max-width: 40em) {
+}

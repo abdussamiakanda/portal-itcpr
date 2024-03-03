@@ -2,7 +2,7 @@ function myHeader() {
   document.getElementById("header").innerHTML = `<div class="menu">
   <div class="menu-top" id="menu-top"></div>
   <div class="menu-bar">
-    <div class="icon" onclick="goTo('./../../../')">
+    <div class="icon" onclick="goTo('./')">
       ITCPR
     </div>
     <div class="pc-menu" id="pc-menu"></div>
@@ -16,13 +16,24 @@ function showTopHeader(){
     <div onclick="GoogleLogout()">LOGOUT</div>`;
 }
 
-function showHeaderMenu(){
-  document.getElementById('pc-menu').innerHTML = `<div class="menu-item" onclick="goTo('./../../../outreach')">
-    OUTREACH
-  </div>
-  <div class="menu-item" onclick="goTo('./../../../people')">
-    PEOPLE
-  </div>`;
+function showHeaderMenu(div){
+  if (div === 'dashboard') {
+    document.getElementById('pc-menu').innerHTML = `
+    <div class="menu-item">
+      DASHBOARD
+    </div>
+    <div class="menu-item" onclick="showDiv('people')">
+      PEOPLE
+    </div>`;
+  } else if (div === 'people') {
+    document.getElementById('pc-menu').innerHTML = `
+    <div class="menu-item" onclick="showDiv('dashboard')">
+      DASHBOARD
+    </div>
+    <div class="menu-item">
+      PEOPLE
+    </div>`;
+  }
 }
 
 function goTo(path) {

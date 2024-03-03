@@ -66,13 +66,12 @@ function checkUser(user){
       showDiv('checklist');
     }else {
       showDiv('dashboard');
-      showHeaderMenu();
     }
   })
 }
 
 function showDiv(div_id){
-  const divs = ["login","checklist","dashboard"];
+  const divs = ["login","checklist","dashboard","people"];
   for (let i = 0; i < divs.length; i++) {
     if (divs[i] !== div_id){
       document.getElementById(divs[i]).innerHTML = "";
@@ -101,6 +100,10 @@ function show(div){
     showChecklist();
   } else if (div === 'dashboard'){
     showDashboard();
+    showHeaderMenu('dashboard');
+  } else if (div === 'people'){
+    showPeople();
+    showHeaderMenu('people');
   }
 }
-checkAuthState()
+checkAuthState();

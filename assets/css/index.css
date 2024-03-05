@@ -57,16 +57,24 @@
     opacity: 0.75;
   }
 
-  .tabs {
+  .root-tab {
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    gap: 20px;
+  }
+
+  .tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 20px;
   }
 
   .tab {
-    max-width: calc(50% - 10px);
     width: 100%;
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
@@ -78,36 +86,89 @@
     padding: 10px 15px 2px 15px;
   }
 
-  .dashboard-icons {
+  .events {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .tab .event {
+    padding: 5px 10px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  .event:hover {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+  }
+  .event .time {
+    font-size: 14px;
+    display: block;
+  }
+  .event .event-icons {
+    font-size: 18px;
+    padding-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  .event .event-icons i {
+    padding: 8px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+  }
+  .event .event-icons i:hover {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    cursor: pointer;
+  }
+
+  .tab .performances {
+    padding: 0px;
+    display: flex;
+    gap: 20px;
+  }
+  .tab .performance {
+    padding: 0px;
+  }
+  .tab .performance span {
+    display: block;
+  }
+
+  .notice span {
+    font-size: 13px;
+  }
+
+
+
+  .link-icons {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
   }
-  .dashboard-icons .icon {
-    padding: 20px 30px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  .link-icons .icon {
+    padding: 10px 20px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
-    width: 80px;
+    width: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
   }
-  .dashboard-icons .icon:hover {
+  .link-icons .icon:hover {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
   }
-  .dashboard-icons .icon i {
+  .link-icons .icon i {
     display: block;
-    font-size: 60px;
+    font-size: 30px;
   }
-  .dashboard-icons .icon span {
+  .link-icons .icon span {
     display: block;
-    padding: 10px 0px 0px 0px;
-    font-size: 18px;
+    padding: 5px 0px 0px 0px;
+    font-size: 16px;
   }
 
 

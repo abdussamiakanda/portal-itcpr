@@ -26,20 +26,7 @@ function showDashboard() {
         </div>
         <div class="tab">
           <h3>Useful Links</h3>
-          <div class="link-icons">
-            <div class="icon" onclick="goToExternal('https://itcpr.org')">
-              <i class="fa-solid fa-earth-asia"></i>
-              <span>Website</span>
-            </div>
-            <div class="icon" onclick="goToExternal('https://mail.itcpr.org')">
-              <i class="fa-solid fa-envelope"></i>
-              <span>Email</span>
-            </div>
-            <div class="icon" onclick="goToExternal('https://discord.gg/bfCJQvQybU')">
-              <i class="fa-brands fa-discord"></i>
-              <span>Discord</span>
-            </div>
-          </div>
+          <div class="link-icons" id="useful-links"></div>
         </div>
       </div>
 
@@ -49,6 +36,7 @@ function showDashboard() {
   showEvents();
   showPerformances();
   showNotices();
+  showUsefulLinks()
 }
 
 function showInformations() {
@@ -204,5 +192,19 @@ function doIt(title,text) {
   </div>`;
 }
 
-
+function showUsefulLinks() {
+  document.getElementById('useful-links').innerHTML = `
+  <div class="icon" onclick="goToExternal('https://itcpr.org')">
+    <i class="fa-solid fa-earth-asia"></i>
+    <span>Website</span>
+  </div>
+  <div class="icon" onclick="goToExternal('https://mail.itcpr.org')">
+    <i class="fa-solid fa-envelope"></i>
+    <span>Email</span>
+  </div>
+  <div class="icon" onclick="goToExternal('https://discord.gg/bfCJQvQybU')">
+    <i class="fa-brands fa-discord"></i>
+    <span>Discord</span>
+  </div>`;
+}
 

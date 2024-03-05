@@ -13,7 +13,7 @@ function checkAuthState(){
     if(user){
       userdata = user;
       verifyUser(user);
-    }else{
+    } else {
       showDiv('login');
     }
   })
@@ -41,12 +41,12 @@ function deleteEmail(){
 }
 
 function GoogleLogout() {
-  console.log('ok');
   firebase
     .auth()
     .signOut()
     .then(() => {
       checkAuthState();
+      document.getElementById('pc-menu').innerHTML = '';
     })
     .catch((e) => {
       console.log(e);
@@ -106,4 +106,5 @@ function show(div){
     showHeaderMenu('people');
   }
 }
+
 checkAuthState();

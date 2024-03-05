@@ -19,7 +19,7 @@ function showTopHeader(){
 function showHeaderMenu(div){
   if (div === 'dashboard') {
     document.getElementById('pc-menu').innerHTML = `
-    <div class="menu-item">
+    <div class="menu-item selected">
       DASHBOARD
     </div>
     <div class="menu-item" onclick="showDiv('people')">
@@ -30,7 +30,7 @@ function showHeaderMenu(div){
     <div class="menu-item" onclick="showDiv('dashboard')">
       DASHBOARD
     </div>
-    <div class="menu-item">
+    <div class="menu-item selected">
       PEOPLE
     </div>`;
   }

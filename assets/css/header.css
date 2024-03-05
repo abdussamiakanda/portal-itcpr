@@ -87,6 +87,10 @@
     color: white;
     background-color: rgb(157, 157, 189);
   }
+  .pc-menu .selected {
+    color: white;
+    background-color: rgb(157, 157, 189);
+  }
   .about-items {
     position: absolute;
     display: none;

@@ -35,7 +35,7 @@ function showDashboard() {
               <i class="fa-solid fa-envelope"></i>
               <span>Email</span>
             </div>
-            <div class="icon" onclick="goToExternal('https://itcpr.org')">
+            <div class="icon" onclick="goToExternal('https://discord.gg/bfCJQvQybU')">
               <i class="fa-brands fa-discord"></i>
               <span>Discord</span>
             </div>

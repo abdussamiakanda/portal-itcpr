@@ -105,7 +105,7 @@ function showAdminNotice() {
         var criteria = snapshot1.child(childSnapshot.key + "/criteria").val();
 
         document.getElementById('admin-notices').innerHTML += `
-        <div class='event notice'>
+        <div class='admin-event'>
           <b>${title}</b> <br>
           <span>${text}</span>
         </div>`;

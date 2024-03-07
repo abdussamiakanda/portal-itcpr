@@ -49,16 +49,16 @@ function showInformations() {
     var email = snapshot.child('email').val();
 
     database.ref('/groups/'+group).once("value").then((snapshot1) => {
-    var gname = snapshot1.child('name').val();
-    var lead = snapshot1.child('lead').val();
+      var gname = snapshot1.child('name').val();
+      var lead = snapshot1.child('lead').val();
 
-    document.getElementById('informations').innerHTML = `
-    <b>Name:</b> ${name} <br>
-    <b>Position:</b> ${position} <br />
-    <b>Research Group:</b> ${gname} <br />
-    <b>Group Lead:</b> ${lead}
-    ${position === 'Intern' ? '<br> <b>Program Duration:</b> '+ start + ' - ' + end : '' }
-    <br> <b>Email:</b> ${email}`;
+      document.getElementById('informations').innerHTML = `
+      <b>Name:</b> ${name} <br>
+      <b>Position:</b> ${position} <br />
+      <b>Research Group:</b> ${gname} <br />
+      <b>Group Lead:</b> ${lead}
+      ${position === 'Intern' ? '<br> <b>Program Duration:</b> '+ start + ' - ' + end : '' }
+      <br> <b>Email:</b> ${email}`;
     })
   })
 }
@@ -83,14 +83,14 @@ function showEvents() {
             <b>${title}</b> <br>
             <span class='time'>${time}</span>
             <span class='event-icons'>
-              <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"></i>
-              <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"></i>
+              <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
+              <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
             </span>
           </div>`;
         }
       });
-    })
-  })
+    });
+  });
 }
 
 function showPerformances() {
@@ -140,7 +140,6 @@ function createPieChart(targetId, data) {
   arc.append("path")
     .attr("d", path)
     .attr("fill", function(d) { return color(d.data.label); });
-
 
   g.append("text")
     .attr("text-anchor", "middle")
@@ -208,3 +207,19 @@ function showUsefulLinks() {
   </div>`;
 }
 
+function alertMessage(type = "success", message) {
+  const alertSection = document.getElementById("alerts");
+  let content = message;
+  alertSection.innerHTML = content;
+
+  if(type === "success") {
+      alertSection.classList.add("show-alerts-success");
+  } else {
+      alertSection.classList.add("show-alerts-danger");
+  }
+
+  setTimeout(() => {
+      alertSection.classList.remove("show-alerts-success", "show-alerts-danger");
+      alertSection.innerHTML = '';
+  }, 3000);
+}

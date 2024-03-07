@@ -104,13 +104,15 @@
     display: block;
   }
   .event .event-icons {
-    font-size: 18px;
-    padding-top: 10px;
+    font-size: 12px;
+    padding: 10px 0px 3px 0px;
     display: flex;
     gap: 10px;
   }
   .event .event-icons i {
-    padding: 8px;
+    padding: 5px 8px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
     border-radius: 10px;
   }
@@ -243,8 +245,190 @@
     cursor: pointer;
   }
 
+  .admin-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .admin-top div {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .admin-top div:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+  .admin-top .selected {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+
+  .admin-contents {
+    margin-top: 50px;
+  }
+  .adduser-btn-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-bottom: 20px;
+  }
+  .adduser-btn-container .adduser-btn {
+    padding: 5px 10px;
+    background-color: rgb(157, 157, 189);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .adduser-btn-container .adduser-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .admin-contents .users-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+  }
+  .admin-contents .users-top div:nth-child(1) {
+    width: 100%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top div:nth-child(2) {
+    width: 50%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top div:nth-child(3) {
+    width: 50%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top div:nth-child(4) {
+    width: 50%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top div:nth-child(5) {
+    width: 200px;
+  }
+
+  
+  .admin-contents .admin-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .admin-contents .admin-user:hover {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  .admin-contents .admin-user div:nth-child(1) {
+    width: 100%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user div:nth-child(2) {
+    width: 50%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user div:nth-child(3) {
+    width: 50%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user div:nth-child(4) {
+    width: 50%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user div:nth-child(5) {
+    width: 200px;
+  }
+
+  
+
+  .admin-events {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .admin-events .admin-event {
+    padding: 5px 10px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  .admin-events .admin-event:hover {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+  }
+  .admin-events .admin-event .time {
+    font-size: 14px;
+    display: block;
+  }
+  .admin-events .admin-event .event-icons {
+    font-size: 12px;
+    padding: 10px 0px 3px 0px;
+    display: flex;
+    gap: 10px;
+  }
+  .admin-events .admin-event .event-icons i {
+    padding: 5px 8px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+  }
+  .admin-events .admin-event .event-icons i:hover {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    cursor: pointer;
+  }
 
 
+
+  .alerts {
+    /* visibility: hidden; */
+    min-width: 300px;
+    text-align: center;
+    border-radius: 4px;
+    padding: 10px;
+    position: fixed;
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+    z-index: 110;
+  }
+  .show-alerts-success {
+    visibility: visible;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  .show-alerts-danger {
+    visibility: visible;
+    background-color: black;
+    border: 1px solid white;
+    color: white;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  @-webkit-keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 20px; opacity: 1;}
+  }
+  @keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 20px; opacity: 1;}
+  }
+  @-webkit-keyframes fadeout {
+    from {top: 20px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  }
+  @keyframes fadeout {
+    from {top: 20px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  }
 }
 
 @media screen and (min-width: 0em) and (max-width: 40em) {

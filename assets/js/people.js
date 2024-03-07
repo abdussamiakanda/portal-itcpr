@@ -121,4 +121,5 @@ function capitalizeFirstLetter(string) {
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
+  alertMessage(t="success","Email copied to clipboard!");
 }

@@ -71,7 +71,7 @@ function checkUser(user){
 }
 
 function showDiv(div_id){
-  const divs = ["login","checklist","dashboard","people"];
+  const divs = ["login","checklist","dashboard","people","admin"];
   for (let i = 0; i < divs.length; i++) {
     if (divs[i] !== div_id){
       document.getElementById(divs[i]).innerHTML = "";
@@ -104,6 +104,9 @@ function show(div){
   } else if (div === 'people'){
     showPeople();
     showHeaderMenu('people');
+  } else if (div === 'admin'){
+    showAdmin('events');
+    showHeaderMenu('admin');
   }
 }
 

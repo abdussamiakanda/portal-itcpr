@@ -16,24 +16,24 @@ function showTopHeader(){
     <div onclick="GoogleLogout()">LOGOUT</div>`;
 }
 
-function showHeaderMenu(div){
-  if (div === 'dashboard') {
+function showHeaderMenu(div) {
+  database.ref('/users/' + userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
+    var position = snapshot.child('position').val();
+
     document.getElementById('pc-menu').innerHTML = `
-    <div class="menu-item selected">
-      DASHBOARD
-    </div>
-    <div class="menu-item" onclick="showDiv('people')">
-      PEOPLE
-    </div>`;
-  } else if (div === 'people') {
-    document.getElementById('pc-menu').innerHTML = `
-    <div class="menu-item" onclick="showDiv('dashboard')">
-      DASHBOARD
-    </div>
-    <div class="menu-item selected">
-      PEOPLE
-    </div>`;
-  }
+      <div class="menu-item${div === 'dashboard' ? ' selected' : ''}" ${div !== 'dashboard' ? `onclick="showDiv('dashboard')"` : ''}>
+        DASHBOARD
+      </div>
+      <div class="menu-item${div === 'people' ? ' selected' : ''}" ${div !== 'people' ? `onclick="showDiv('people')"` : ''}>
+        PEOPLE
+      </div>
+      ${position !== "Intern" && position !== "Member" ? `
+      <div class="menu-item${div === 'admin' ? ' selected' : ''}" ${div !== 'admin' ? `onclick="showDiv('admin')"` : ''}>
+        ADMIN
+      </div>
+      ` : ''}`;
+
+  });
 }
 
 function goTo(path) {

@@ -1,17 +1,27 @@
 var provider = new firebase.auth.GoogleAuthProvider();
 var database = firebase.database();
 var userdata = null;
+var emailKey = null;
+
+function sanitizeEmail(email) {
+  // Basic sanitation to replace problematic characters
+  // Firebase keys can't contain '.', '#', '$', '[', or ']'
+  return email.replace(/\./g, '');
+}
 
 function GoogleLogin() {
-  firebase.auth().signInWithPopup(provider).then(res=>{
-    verifyUser(user);
-  }).catch((e)=>{})
+  firebase.auth().signInWithPopup(provider).then(res => {
+    verifyUser(res.user); // Corrected to use res.user
+  }).catch((e) => {
+    console.error("Login failed:", e); // Added error logging for better debugging
+  });
 }
 
 function checkAuthState(){
   firebase.auth().onAuthStateChanged(user=>{
     if(user){
       userdata = user;
+      emailKey = sanitizeEmail(userdata.email.replace("@gmail.com", ""));
       verifyUser(user);
     } else {
       showDiv('login');
@@ -23,7 +33,7 @@ function verifyUser(user){
   var isEmail = false;
   var email = user.email
   database.ref('/users').orderByKey().once("value").then((snapshot) => {
-    isEmail = snapshot.child(email.replace("@gmail.com", "")).exists();
+    isEmail = snapshot.child(sanitizeEmail(email.replace("@gmail.com", ""))).exists();
 
     if(isEmail === true){
       verified(user);
@@ -59,7 +69,7 @@ function verified(user){
 }
 
 function checkUser(user){
-  database.ref('/users/'+user.email.replace("@gmail.com", "")).orderByKey().once("value").then((snapshot) => {
+  database.ref('/users/'+ emailKey).orderByKey().once("value").then((snapshot) => {
     isNew = snapshot.child('new').val();
 
     if(isNew === true){
@@ -71,7 +81,7 @@ function checkUser(user){
 }
 
 function showDiv(div_id){
-  const divs = ["login","checklist","dashboard","people","admin"];
+  const divs = ["login","checklist","dashboard","people","group","admin"];
   for (let i = 0; i < divs.length; i++) {
     if (divs[i] !== div_id){
       document.getElementById(divs[i]).innerHTML = "";
@@ -107,6 +117,9 @@ function show(div){
   } else if (div === 'admin'){
     showAdmin('events');
     showHeaderMenu('admin');
+  } else if (div === 'group'){
+    showGroup();
+    showHeaderMenu('group');
   }
 }
 

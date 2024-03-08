@@ -32,7 +32,7 @@ function showPeople() {
       var email = snapshot.child(childSnapshot.key + "/email").val();
       var url = snapshot.child(childSnapshot.key + "/url").val();
 
-      if (userdata.email.replace("@gmail.com", "") !== childSnapshot.key && position !== 'Terminated') {
+      if (emailKey !== childSnapshot.key && position !== 'Terminated') {
         document.getElementById('allpeople').innerHTML += `
         <div class="people">
           <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
@@ -68,7 +68,7 @@ function applyFilters() {
         var isIntern = position === 'Intern';
         var isInt = drop2 === 'Intern';
         
-        if (drop1 && !drop2 && userdata.email.replace("@gmail.com", "") !== childSnapshot.key && position !== 'Terminated' && drop1 === capitalizeFirstLetter(group)) {
+        if (drop1 && !drop2 && emailKey !== childSnapshot.key && position !== 'Terminated' && drop1 === capitalizeFirstLetter(group)) {
           document.getElementById('allpeople').innerHTML += `
           <div class="people">
             <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
@@ -81,7 +81,7 @@ function applyFilters() {
               </div>
             </div>
           </div>`
-        } else if (!drop1 && drop2 && userdata.email.replace("@gmail.com", "") !== childSnapshot.key && position !== 'Terminated' && isIntern === isInt) {
+        } else if (!drop1 && drop2 && emailKey !== childSnapshot.key && position !== 'Terminated' && isIntern === isInt) {
           document.getElementById('allpeople').innerHTML += `
           <div class="people">
             <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
@@ -94,7 +94,7 @@ function applyFilters() {
               </div>
             </div>
           </div>`
-        } else if (drop1 && drop2 && userdata.email.replace("@gmail.com", "") !== childSnapshot.key && position !== 'Terminated' && drop1 === capitalizeFirstLetter(group) && isIntern === isInt) {
+        } else if (drop1 && drop2 && emailKey !== childSnapshot.key && position !== 'Terminated' && drop1 === capitalizeFirstLetter(group) && isIntern === isInt) {
           document.getElementById('allpeople').innerHTML += `
           <div class="people">
             <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
@@ -107,7 +107,7 @@ function applyFilters() {
               </div>
             </div>
           </div>`
-        } else if (userdata.email.replace("@gmail.com", "") !== childSnapshot.key) {
+        } else if (emailKey !== childSnapshot.key) {
           document.getElementById('allpeople').innerHTML = 'No matched user found!';
         }
       })

@@ -5,11 +5,11 @@ function showDashboard() {
       <div class="tabs">
 
         <div class="tab">
-          <h3>Upcoming Events</h3>
+          <h2>Upcoming Events</h2>
           <div id='events' class='events'></div>
         </div>
         <div class="tab">
-          <h3>Notices</h3>
+          <h2>Notices</h2>
           <div id='notices' class='events'></div>
         </div>
 
@@ -17,15 +17,15 @@ function showDashboard() {
 
       <div class="tabs">
         <div class="tab">
-          <h3>Informations</h3>
+          <h2>Informations</h2>
           <div id='informations'></div>
         </div>
         <div class="tab">
-          <h3>Performances</h3>
+          <h2>Performances</h2>
           <div id='performances'></div>
         </div>
         <div class="tab">
-          <h3>Useful Links</h3>
+          <h2>Useful Links</h2>
           <div class="link-icons" id="useful-links"></div>
         </div>
       </div>
@@ -40,82 +40,123 @@ function showDashboard() {
 }
 
 function showInformations() {
-  database.ref('/users/'+userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
-    var name = snapshot.child('name').val();
-    var group = snapshot.child('group').val();
-    var position = snapshot.child('position').val();
-    var start = snapshot.child('start').val();
-    var end = snapshot.child('end').val();
-    var email = snapshot.child('email').val();
+  // Simplify user reference path
+  const userPath = `/users/${emailKey}`;
+  database.ref(userPath).once("value").then((userSnapshot) => {
+    const userData = {
+      name: userSnapshot.child('name').val(),
+      group: userSnapshot.child('group').val(),
+      position: userSnapshot.child('position').val(),
+      start: userSnapshot.child('start').val(),
+      end: userSnapshot.child('end').val(),
+      email: userSnapshot.child('email').val()
+    };
 
-    database.ref('/groups/'+group).once("value").then((snapshot1) => {
-      var gname = snapshot1.child('name').val();
-      var lead = snapshot1.child('lead').val();
+    // Fetch group information in a separate call
+    return database.ref(`/groups/${userData.group}`).once("value").then((groupSnapshot) => {
+      return { userData, groupData: groupSnapshot.val() };
+    });
+  }).then(({ userData, groupData }) => {
+    // Construct HTML content
+    let htmlContent = `
+      <b>Name:</b> ${userData.name} <br>
+      <b>Position:</b> ${userData.position} <br>
+      <b>Research Group:</b> ${groupData.name} <br>
+      <b>Group Lead:</b> ${groupData.lead}
+      ${userData.position === 'Intern' ? '<br> <b>Program Duration:</b> '+ userData.start + ' - ' + userData.end : ''}
+      <br> <b>Email:</b> ${userData.email}`;
 
-      document.getElementById('informations').innerHTML = `
-      <b>Name:</b> ${name} <br>
-      <b>Position:</b> ${position} <br />
-      <b>Research Group:</b> ${gname} <br />
-      <b>Group Lead:</b> ${lead}
-      ${position === 'Intern' ? '<br> <b>Program Duration:</b> '+ start + ' - ' + end : '' }
-      <br> <b>Email:</b> ${email}`;
-    })
-  })
+    // Update the DOM once
+    document.getElementById('informations').innerHTML = htmlContent;
+  }).catch(error => {
+    console.error("Failed to load user or group information", error);
+    // Handle error or show a message to the user
+  });
 }
 
 function showEvents() {
-  document.getElementById('events').innerHTML = '';
-  database.ref('/users/'+userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
-    var group = snapshot.child('group').val();
+  const eventsElement = document.getElementById('events');
+  // Clear the container once
+  eventsElement.innerHTML = '';
 
-    database.ref('/groups/'+group+'/events').orderByKey().once("value").then((snapshot1) => {
-      snapshot1.forEach(function (childSnapshot) {
-        var title = snapshot1.child(childSnapshot.key + "/title").val();
-        var time = snapshot1.child(childSnapshot.key + "/time").val();
-        var meeting = snapshot1.child(childSnapshot.key + "/meeting").val();
-        var attachment = snapshot1.child(childSnapshot.key + "/attachment").val();
+  database.ref('/users/' + emailKey).once("value").then(snapshot => {
+    const group = snapshot.child('group').val();
+    return database.ref('/groups/' + group + '/events').orderByKey().once("value");
+  }).then(snapshot => {
+    let htmlContent = ''; // Initialize an empty string to build the HTML
 
-        var now = Date.now();
+    snapshot.forEach(childSnapshot => {
+      const { title, time, meeting, attachment, timezone } = childSnapshot.val();
+      const now = moment.tz(timezone).valueOf(); // Current time in the event's timezone
 
-        if (now < childSnapshot.key) {
-          document.getElementById('events').innerHTML += `
+      // Assuming childSnapshot.key is meant to be compared as a timestamp
+      if (now < Number(childSnapshot.key)) {
+        const eventTime = convertToLocalTime(time, timezone);
+        htmlContent += `
           <div class='event'>
             <b>${title}</b> <br>
-            <span class='time'>${time}</span>
+            <span class='time'>${eventTime}</span>
             <span class='event-icons'>
               <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
               <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
             </span>
           </div>`;
-        }
-      });
+      }
     });
+
+    // Update the DOM once after building the HTML string
+    eventsElement.innerHTML = htmlContent || 'No upcoming events!';
+
+  }).catch(error => {
+    console.error("Error fetching events: ", error);
+    // Optionally, display an error message to the user
+    eventsElement.innerHTML = 'Failed to load events.';
   });
 }
 
 function showPerformances() {
-  database.ref('/users/'+userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
-    var attendance = snapshot.child('attendance').val().split('/');
-    var participation = snapshot.child('participation').val().split('/');
+  
+  database.ref('/users/' + emailKey).once("value").then(snapshot => {
+    const attendanceRaw = snapshot.child('attendance').val() || '0/0';
+    const participationRaw = snapshot.child('participation').val() || '0/0';
 
-    document.getElementById('performances').innerHTML = `
-    <div class='performances'>
-      <div class='performance' id='performance1'>
-        <svg width="100" height="100"></svg>
-        <span>Attendance</span>
-      </div>
-      <div class='performance' id='performance2'>
-        <svg width="100" height="100"></svg>
-        <span>Participation</span>
-      </div>
-    </div>`;
+    const attendance = attendanceRaw.split('/').map(Number);
+    const participation = participationRaw.split('/').map(Number);
 
-    var data1 = [{label: 'Red', percent: attendance[1]-attendance[0]}, {label: 'Blue', percent: attendance[0]}];
-    var data2 = [{label: 'Red', percent: participation[1]-participation[0]}, {label: 'Blue', percent: participation[0]}];
+    // Building HTML content for performance
+    const performancesHTML = `
+      <div class='performances'>
+        <div class='performance' id='performance1'>
+          <svg width="100" height="100"></svg>
+          <span>Attendance</span>
+        </div>
+        <div class='performance' id='performance2'>
+          <svg width="100" height="100"></svg>
+          <span>Participation</span>
+        </div>
+      </div>`;
 
+    // Update the DOM once
+    document.getElementById('performances').innerHTML = performancesHTML;
+
+    // Prepare data for charts
+    const data1 = [
+      { label: 'Missed', percent: attendance[0] },
+      { label: 'Attended', percent: Math.max(0, attendance[1] - attendance[0]) },
+    ];
+    const data2 = [
+      { label: 'Missed', percent: participation[0] },
+      { label: 'Participated', percent: Math.max(0, participation[1] - participation[0]) },
+    ];
+
+    // Create charts
     createPieChart("performance1", data1);
     createPieChart("performance2", data2);
-  })
+
+  }).catch(error => {
+    console.error("Error fetching user performance data:", error);
+    document.getElementById('performances').innerHTML = 'Failed to load performance data.';
+  });
 }
 
 function createPieChart(targetId, data) {
@@ -147,79 +188,73 @@ function createPieChart(targetId, data) {
     .text(percentage + "%");
 }
 
-
 function showNotices() {
-  document.getElementById('notices').innerHTML = '';
-  database.ref('/users/'+userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
-    var group = snapshot.child('group').val();
-    var position = snapshot.child('position').val();
+  const noticesElement = document.getElementById('notices');
+  
+  // Clear notices content initially
+  noticesElement.innerHTML = '';
 
-    database.ref('/notices').orderByKey().once("value").then((snapshot1) => {
-      snapshot1.forEach(function (childSnapshot) {
-        var title = snapshot1.child(childSnapshot.key + "/title").val();
-        var text = snapshot1.child(childSnapshot.key + "/text").val();
-        var till = snapshot1.child(childSnapshot.key + "/till").val();
-        var criteria = snapshot1.child(childSnapshot.key + "/criteria").val();
+  // Retrieve user-specific data once
+  database.ref(`/users/${emailKey}`).once("value").then(userSnapshot => {
+    const { group, position } = userSnapshot.val(); // Destructure for easier access
 
-        var now = Date.now();
+    // Fetch all notices
+    return database.ref('/notices').orderByKey().once("value").then(noticesSnapshot => {
+      let htmlContent = ''; // Initialize HTML content string
+      
+      noticesSnapshot.forEach(noticeSnapshot => {
+        const { title, text, till, criteria } = noticeSnapshot.val();
+        const now = Date.now();
 
-        if (now < till) {
-          if (criteria === 'All') {
-            doIt(title,text);
-          } else if (criteria === position) {
-            doIt(title,text);
-          } else if (criteria === group) {
-            doIt(title,text);
-          }
+        // Check if the notice is still active and if it matches the user's criteria
+        if (now < till && (criteria === 'All' || criteria === position || criteria === group)) {
+          htmlContent += `
+            <div class='event notice'>
+              <b>${title}</b> <br>
+              <span>${text}</span>
+            </div>`;
         }
       });
-    }).then(() => {
-      var whatif = document.getElementById('notices').innerHTML;
-  
-      if (whatif === '') {
-        document.getElementById('notices').innerHTML = 'No new notices!'
-      }
-    })
-  })
-}
 
-function doIt(title,text) {
-  document.getElementById('notices').innerHTML += `
-  <div class='event notice'>
-    <b>${title}</b> <br>
-    <span>${text}</span>
-  </div>`;
+      // Update DOM only once with the final HTML content
+      noticesElement.innerHTML = htmlContent || 'No new notices!';
+    });
+  }).catch(error => {
+    console.error("Error fetching notices:", error);
+    noticesElement.innerHTML = 'Failed to load notices.';
+  });
 }
 
 function showUsefulLinks() {
-  document.getElementById('useful-links').innerHTML = `
-  <div class="icon" onclick="goToExternal('https://itcpr.org')">
-    <i class="fa-solid fa-earth-asia"></i>
-    <span>Website</span>
-  </div>
-  <div class="icon" onclick="goToExternal('https://mail.itcpr.org')">
-    <i class="fa-solid fa-envelope"></i>
-    <span>Email</span>
-  </div>
-  <div class="icon" onclick="goToExternal('https://discord.gg/bfCJQvQybU')">
-    <i class="fa-brands fa-discord"></i>
-    <span>Discord</span>
-  </div>`;
+  const links = [
+    { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
+    { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
+    { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
+  ];
+
+  const usefulLinksElement = document.getElementById('useful-links');
+  usefulLinksElement.innerHTML = links.map(link => `
+    <div class="icon" onclick="goToExternal('${link.url}')">
+      <i class="${link.iconClass}"></i>
+      <span>${link.text}</span>
+    </div>
+  `).join('');
 }
+
+let alertTimeout = null;
 
 function alertMessage(type = "success", message) {
   const alertSection = document.getElementById("alerts");
-  let content = message;
-  alertSection.innerHTML = content;
+  alertSection.innerHTML = message;
 
-  if(type === "success") {
-      alertSection.classList.add("show-alerts-success");
-  } else {
-      alertSection.classList.add("show-alerts-danger");
-  }
+  // Clear existing timeout to prevent immediate removal from previous alert
+  clearTimeout(alertTimeout);
 
-  setTimeout(() => {
-      alertSection.classList.remove("show-alerts-success", "show-alerts-danger");
-      alertSection.innerHTML = '';
+  alertSection.classList.add(type === "success" ? "show-alerts-success" : "show-alerts-danger");
+
+  alertTimeout = setTimeout(() => {
+    alertSection.classList.remove("show-alerts-success", "show-alerts-danger");
+    alertSection.innerHTML = '';
   }, 3000);
 }
+

@@ -25,11 +25,63 @@ function showAdmin(div) {
 
 function showAdminEvents() {
   document.getElementById('admin-contents').innerHTML = `
-  <div class="adduser-btn-container"><div class="adduser-btn"><i class="fa-solid fa-plus"></i> Add Event</div></div>
+  <div class="adduser-btn-container"><div class="adduser-btn" onclick="eventDiv()"><i class="fa-solid fa-plus"></i> Add Event</div></div>
   <div id="admin-events" class="admin-events"></div>
   `;
   showAdminEvent();
 }
+
+function eventDiv() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <div class="form-top">
+        <input type="text" id="title" placeholder="Enter Meeting Title..">
+        <input type="datetime-local" id="time">
+      </div>
+      <input type="text" id="meeting" placeholder="Enter Meeting URL..">
+      <input type="text" id="attachment" placeholder="Enter Meeting Attachment URL..">
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleNewEvent('cancel')">Cancel</div>
+        <div class="add" onclick="handleNewEvent('add')">Add Event</div>
+      </div>
+    </form>
+  </div>
+  `;
+}
+
+function handleNewEvent(what) {
+  if (what === 'add'){
+    var title = document.getElementById('title').value;
+    var time = document.getElementById('time').value;
+    var meeting = document.getElementById('meeting').value;
+    var attachment = document.getElementById('attachment').value;
+    var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const date = new Date(time);
+    const options = { hour: 'numeric', minute: 'numeric', year: 'numeric', month: 'long', day: 'numeric', hour12: true };
+    const formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(date);
+    const timestamp = convertDateTimeToTimestamp(time, userTimeZone);
+
+    database.ref('/users/'+userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
+      var group = snapshot.child('group').val();
+
+      database.ref("/groups/" + group + "/events/"+ timestamp).update({
+        title: title,
+        time: formattedDateTime,
+        meeting: meeting,
+        attachment: attachment,
+        timezone: userTimeZone,
+      });
+    })
+  }
+  showAdminEvents();
+}
+
+function convertDateTimeToTimestamp(dateTime, timeZone) {
+  const timestamp = moment.tz(dateTime, timeZone).valueOf();
+  return timestamp;
+}
+
 
 function showAdminNotices() {
   document.getElementById('admin-contents').innerHTML = `
@@ -55,40 +107,40 @@ function showAdminUsers() {
 }
 
 function showAdminEvent() {
-  document.getElementById('admin-events').innerHTML = '';
-  database.ref('/users/' + userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
+  const adminEventsElement = document.getElementById('admin-events');
+  adminEventsElement.innerHTML = ''; // Clear existing content
+  
+  const userEmail = userdata.email.replace("@gmail.com", "");
+  database.ref('/users/' + userEmail).once("value").then((snapshot) => {
     var group = snapshot.child('group').val();
 
     database.ref('/groups/' + group + '/events').orderByKey().once("value").then((snapshot1) => {
-      const events = [];
+      let eventsHTML = ''; // Use a variable to construct HTML
+
       snapshot1.forEach((childSnapshot) => {
-        const eventData = childSnapshot.val();
-        eventData.key = childSnapshot.key;
-        events.push(eventData);
-      });
-
-      const reversedEvents = events.reverse();
-
-      reversedEvents.forEach((event) => {
-        const { title, time, meeting, attachment, key } = event;
-
-        document.getElementById('admin-events').innerHTML += `
+        const { title, time, meeting, attachment, timezone } = childSnapshot.val();
+        
+        eventsHTML += `
           <div class='admin-event'>
             <b>${title}</b> <br>
-            <span class='time'>${time}</span>
+            <span class='time'>${convertToLocalTime(time, timezone)}</span>
             <span class='event-icons'>
               <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
               <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
             </span>
           </div>`;
       });
-      var whatif = document.getElementById('admin-events').innerHTML;
 
-      if (whatif === '') {
-        document.getElementById('admin-events').innerHTML = 'No events found!'
-      }
+      adminEventsElement.innerHTML = eventsHTML || 'No events found!';
     });
   });
+}
+
+function convertToLocalTime(time, timezone) {
+  var timeInGivenTimezone = moment.tz(time, "MMMM D, YYYY at h:mm A", timezone);
+  var timeInLocalTimezone = timeInGivenTimezone.local().format("MMMM D, YYYY [at] h:mm A");
+
+  return timeInLocalTimezone;
 }
 
 function showAdminNotice() {
@@ -140,5 +192,3 @@ function showAdminUser() {
     });
   });
 }
-
-

@@ -1,5 +1,6 @@
 function showChecklist() {
-  document.getElementById('checklist').innerHTML = `<div class="academic1">
+  document.getElementById('checklist').innerHTML = `
+  <div class="academic1">
     <h1>Complete the tasks below to get integrated with ITCPR</h1>
     <p>
       Make sure you have completed all the tasks, and then clicked
@@ -9,7 +10,7 @@ function showChecklist() {
     <br /><br />
     <form class="checklist">
       <div class="item">
-        <input type="checkbox" id="task1" name="task1" onclick="handleCheck1()"/>
+        <input type="checkbox" id="task1" name="task1" onchange="handleCheck()"/>
         <div>
           <h3>Setup Institutional Email</h3>
           <ul>
@@ -18,24 +19,20 @@ function showChecklist() {
         </div>
       </div>
       <div class="item">
-        <input type="checkbox" id="task2" name="task2" onclick="handleCheck2()"/>
+        <input type="checkbox" id="task2" name="task2" onchange="handleCheck()"/>
         <div>
           <h3>Join our Discord server</h3>
           <ul>
             <li>Discord is our day-to-day communication medium.</li>
-            <li>
-              Install Discord on your devices, e.g., laptop, or smartphone.
-            </li>
+            <li>Install Discord on your devices, e.g., laptop, or smartphone.</li>
             <li>Be sure to have your nickname as the username on the server.</li>
-            <li>
-              Check frequently and daily for updates.
-            </li>
+            <li>Check frequently and daily for updates.</li>
             <li>Join our discord server: </li>
           </ul>
         </div>
       </div>
       <div class="item">
-        <input type="checkbox" id="task3" name="task3" onclick="handleCheck3()"/>
+        <input type="checkbox" id="task3" name="task3" onchange="handleCheck()"/>
         <div>
           <h3>Important Notes</h3>
           <ul>
@@ -44,9 +41,7 @@ function showChecklist() {
               <li>We use Google Calendar for group meeting schedules.</li>
               <li>Keep an eye out to get notified about the calendar events.</li>
             </ul>
-            <li>
-              Google Meet
-            </li>
+            <li>Google Meet</li>
             <ul>
               <li>We use Google Meet for meetings.</li>
               <li>Meeting details can be found in the calendar event description.</li>
@@ -63,50 +58,25 @@ function showChecklist() {
   </div>`;
 }
 
-function handleCheck1() {
-  var task1 = document.getElementById("task1").checked;
-  if (task1 === true) {
-    document.getElementById("task1").setAttribute("checked", false);
-  } else {
-    document.getElementById("task1").setAttribute("checked", true);
-  }
-  handleCheck();
-}
-function handleCheck2() {
-  var task2 = document.getElementById("task2").checked;
-  if (task2 === true) {
-    document.getElementById("task2").setAttribute("checked", false);
-  } else {
-    document.getElementById("task2").setAttribute("checked", true);
-  }
-  handleCheck();
-}
-function handleCheck3() {
-  var task3 = document.getElementById("task3").checked;
-  if (task3 === true) {
-    document.getElementById("task3").setAttribute("checked", false);
-  } else {
-    document.getElementById("task3").setAttribute("checked", true);
-  }
-  handleCheck();
-}
-
-
 function handleCheck() {
-  var task1 = document.getElementById('task1').getAttribute("checked");
-  var task2 = document.getElementById('task2').getAttribute("checked");
-  var task3 = document.getElementById('task3').getAttribute("checked");
-  if (task1 === "false" && task2 === "false" && task3 === "false") {
-    document.getElementById("disabled-btn").setAttribute("onclick", "completeTasks()");
-    document.getElementById("disabled-btn").removeAttribute("disabled");
+  const isTask1Checked = document.getElementById('task1').checked;
+  const isTask2Checked = document.getElementById('task2').checked;
+  const isTask3Checked = document.getElementById('task3').checked;
+  
+  const allTasksChecked = isTask1Checked && isTask2Checked && isTask3Checked;
+  const button = document.getElementById("disabled-btn");
+  
+  if (allTasksChecked) {
+    button.removeAttribute("disabled");
+    button.onclick = completeTasks; // Assign the completeTasks function to the onclick handler
   } else {
-    document.getElementById("disabled-btn").removeAttribute("onclick");
-    document.getElementById("disabled-btn").setAttribute("disabled", "");
+    button.setAttribute("disabled", "");
+    button.onclick = null; // Remove the onclick handler if not all tasks are checked
   }
 }
 
 function completeTasks() {
-  database.ref("/users/" + userdata.email.replace("@gmail.com", "")).update({
+  database.ref("/users/" + emailKey).update({
     new: false,
   });
   checkAuthState();

@@ -16,24 +16,35 @@ function showTopHeader(){
     <div onclick="GoogleLogout()">LOGOUT</div>`;
 }
 
-function showHeaderMenu(div) {
-  database.ref('/users/' + userdata.email.replace("@gmail.com", "")).once("value").then((snapshot) => {
-    var position = snapshot.child('position').val();
+function showHeaderMenu(selectedDiv = '') {
+  database.ref('/users/' + emailKey).once("value").then(snapshot => {
+    const position = snapshot.child('position').val();
+    const group = snapshot.child('group').val();
+    const type = snapshot.child('type').val();
 
-    document.getElementById('pc-menu').innerHTML = `
-      <div class="menu-item${div === 'dashboard' ? ' selected' : ''}" ${div !== 'dashboard' ? `onclick="showDiv('dashboard')"` : ''}>
-        DASHBOARD
-      </div>
-      <div class="menu-item${div === 'people' ? ' selected' : ''}" ${div !== 'people' ? `onclick="showDiv('people')"` : ''}>
-        PEOPLE
-      </div>
-      ${position !== "Intern" && position !== "Member" ? `
-      <div class="menu-item${div === 'admin' ? ' selected' : ''}" ${div !== 'admin' ? `onclick="showDiv('admin')"` : ''}>
-        ADMIN
-      </div>
-      ` : ''}`;
+    const menuItems = [
+      { name: 'DASHBOARD', onclick: "showDiv('dashboard')", id: 'dashboard' },
+      { name: capitalizeFirstLetter(group), onclick: "showDiv('group')", id: 'group' }, // Using id: 'group' for identification
+      { name: 'PEOPLE', onclick: "showDiv('people')", id: 'people' },
+      { name: 'ADMIN', onclick: "showDiv('admin')", id: 'admin', allowed: position !== "Intern" && (position !== "Member" || type === 'admin') },
+    ];
 
+    const pcMenu = document.getElementById('pc-menu');
+    pcMenu.innerHTML = menuItems
+      .filter(item => item.allowed !== false) // Filters out any items where allowed is explicitly set to false
+      .map(item => {
+        // Use item.id to determine if this item is selected
+        const isSelected = item.id === selectedDiv;
+        const itemClass = isSelected ? ' selected' : '';
+        return `<div class="menu-item${itemClass}" onclick="${item.onclick}">${item.name}</div>`;
+      })
+      .join('');
   });
+}
+
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function goTo(path) {

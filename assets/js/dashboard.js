@@ -40,38 +40,32 @@ function showDashboard() {
 }
 
 function showInformations() {
-  // Simplify user reference path
-  const userPath = `/users/${emailKey}`;
-  database.ref(userPath).once("value").then((userSnapshot) => {
-    const userData = {
-      name: userSnapshot.child('name').val(),
-      group: userSnapshot.child('group').val(),
-      position: userSnapshot.child('position').val(),
-      start: userSnapshot.child('start').val(),
-      end: userSnapshot.child('end').val(),
-      email: userSnapshot.child('email').val()
-    };
+  const userPath = `users/${emailKey}`;
 
-    // Fetch group information in a separate call
-    return database.ref(`/groups/${userData.group}`).once("value").then((groupSnapshot) => {
-      return { userData, groupData: groupSnapshot.val() };
-    });
-  }).then(({ userData, groupData }) => {
-    // Construct HTML content
-    let htmlContent = `
-      <b>Name:</b> ${userData.name} <br>
-      <b>Position:</b> ${userData.position} <br>
-      <b>Research Group:</b> ${groupData.name} <br>
-      <b>Group Lead:</b> ${groupData.lead}
-      ${userData.position === 'Intern' ? '<br> <b>Program Duration:</b> '+ userData.start + ' - ' + userData.end : ''}
-      <br> <b>Email:</b> ${userData.email}`;
+  const userSnapshot = entireDbSnapshot.child(userPath);
+  const userData = {
+    name: userSnapshot.child('name').val(),
+    group: userSnapshot.child('group').val(),
+    position: userSnapshot.child('position').val(),
+    start: userSnapshot.child('start').val(),
+    end: userSnapshot.child('end').val(),
+    email: userSnapshot.child('email').val()
+  };
 
-    // Update the DOM once
-    document.getElementById('informations').innerHTML = htmlContent;
-  }).catch(error => {
-    console.error("Failed to load user or group information", error);
-    // Handle error or show a message to the user
-  });
+  const groupPath = `/groups/${userData.group}`;
+
+  const groupSnapshot = entireDbSnapshot.child(groupPath);
+  const groupData = groupSnapshot.val();
+
+  let htmlContent = `
+    <b>Name:</b> ${userData.name} <br>
+    <b>Position:</b> ${userData.position} <br>
+    <b>Research Group:</b> ${groupData.name} <br>
+    <b>Group Lead:</b> ${groupData.lead}
+    ${userData.position === 'Intern' ? '<br> <b>Program Duration:</b> ' + userData.start + ' - ' + userData.end : ''}
+    <br> <b>Email:</b> ${userData.email}`;
+
+  document.getElementById('informations').innerHTML = htmlContent;
 }
 
 function showEvents() {
@@ -79,84 +73,77 @@ function showEvents() {
   // Clear the container once
   eventsElement.innerHTML = '';
 
-  database.ref('/users/' + emailKey).once("value").then(snapshot => {
-    const group = snapshot.child('group').val();
-    return database.ref('/groups/' + group + '/events').orderByKey().once("value");
-  }).then(snapshot => {
-    let htmlContent = ''; // Initialize an empty string to build the HTML
+  // Directly access the user's group from the snapshot
+  const userSnapshot = entireDbSnapshot.child('users/' + emailKey);
+  const group = userSnapshot.child('group').val();
 
-    snapshot.forEach(childSnapshot => {
-      const { title, time, meeting, attachment, timezone } = childSnapshot.val();
-      const now = moment.tz(timezone).valueOf(); // Current time in the event's timezone
+  // Directly access the group's events from the snapshot
+  const eventsSnapshot = entireDbSnapshot.child('/groups/' + group + '/events');
 
-      // Assuming childSnapshot.key is meant to be compared as a timestamp
-      if (now < Number(childSnapshot.key)) {
-        const eventTime = convertToLocalTime(time, timezone);
-        htmlContent += `
-          <div class='event'>
-            <b>${title}</b> <br>
-            <span class='time'>${eventTime}</span>
-            <span class='event-icons'>
-              <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
-              <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
-            </span>
-          </div>`;
-      }
-    });
+  let htmlContent = ''; // Initialize an empty string to build the HTML
 
-    // Update the DOM once after building the HTML string
-    eventsElement.innerHTML = htmlContent || 'No upcoming events!';
+  eventsSnapshot.forEach(childSnapshot => {
+    const { title, time, meeting, attachment, timezone } = childSnapshot.val();
+    const now = moment.tz(timezone).valueOf(); // Current time in the event's timezone
 
-  }).catch(error => {
-    console.error("Error fetching events: ", error);
-    // Optionally, display an error message to the user
-    eventsElement.innerHTML = 'Failed to load events.';
+    // Assuming childSnapshot.key is meant to be compared as a timestamp
+    if (now < Number(childSnapshot.key) + (3600000)) {
+      const eventTime = convertToLocalTime(time, timezone);
+      htmlContent += `
+        <div class='event'>
+          <b>${title}</b> <br>
+          <span class='time'>${eventTime}</span>
+          <span class='event-icons'>
+            <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
+            <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
+          </span>
+        </div>`;
+    }
   });
+
+  // Update the DOM once after building the HTML string
+  eventsElement.innerHTML = htmlContent || 'No upcoming events!';
 }
 
 function showPerformances() {
-  
-  database.ref('/users/' + emailKey).once("value").then(snapshot => {
-    const attendanceRaw = snapshot.child('attendance').val() || '0/0';
-    const participationRaw = snapshot.child('participation').val() || '0/0';
+  // Directly access the user's data from the snapshot
+  const userSnapshot = entireDbSnapshot.child('users/' + emailKey);
 
-    const attendance = attendanceRaw.split('/').map(Number);
-    const participation = participationRaw.split('/').map(Number);
+  const attendanceRaw = userSnapshot.child('attendance').val() || '0/0';
+  const participationRaw = userSnapshot.child('participation').val() || '0/0';
 
-    // Building HTML content for performance
-    const performancesHTML = `
-      <div class='performances'>
-        <div class='performance' id='performance1'>
-          <svg width="100" height="100"></svg>
-          <span>Attendance</span>
-        </div>
-        <div class='performance' id='performance2'>
-          <svg width="100" height="100"></svg>
-          <span>Participation</span>
-        </div>
-      </div>`;
+  const attendance = attendanceRaw.split('/').map(Number);
+  const participation = participationRaw.split('/').map(Number);
 
-    // Update the DOM once
-    document.getElementById('performances').innerHTML = performancesHTML;
+  // Building HTML content for performance
+  const performancesHTML = `
+    <div class='performances'>
+      <div class='performance' id='performance1'>
+        <svg width="100" height="100"></svg>
+        <span>Attendance</span>
+      </div>
+      <div class='performance' id='performance2'>
+        <svg width="100" height="100"></svg>
+        <span>Participation</span>
+      </div>
+    </div>`;
 
-    // Prepare data for charts
-    const data1 = [
-      { label: 'Missed', percent: attendance[0] },
-      { label: 'Attended', percent: Math.max(0, attendance[1] - attendance[0]) },
-    ];
-    const data2 = [
-      { label: 'Missed', percent: participation[0] },
-      { label: 'Participated', percent: Math.max(0, participation[1] - participation[0]) },
-    ];
+  // Update the DOM once
+  document.getElementById('performances').innerHTML = performancesHTML;
 
-    // Create charts
-    createPieChart("performance1", data1);
-    createPieChart("performance2", data2);
+  // Prepare data for charts
+  const data1 = [
+    { label: 'Missed', percent: attendance[0] },
+    { label: 'Attended', percent: Math.max(0, attendance[1] - attendance[0]) },
+  ];
+  const data2 = [
+    { label: 'Missed', percent: participation[0] },
+    { label: 'Participated', percent: Math.max(0, participation[1] - participation[0]) },
+  ];
 
-  }).catch(error => {
-    console.error("Error fetching user performance data:", error);
-    document.getElementById('performances').innerHTML = 'Failed to load performance data.';
-  });
+  // Create charts
+  createPieChart("performance1", data1);
+  createPieChart("performance2", data2);
 }
 
 function createPieChart(targetId, data) {
@@ -194,35 +181,31 @@ function showNotices() {
   // Clear notices content initially
   noticesElement.innerHTML = '';
 
-  // Retrieve user-specific data once
-  database.ref(`/users/${emailKey}`).once("value").then(userSnapshot => {
-    const { group, position } = userSnapshot.val(); // Destructure for easier access
+  // Directly access user-specific data from the snapshot
+  const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
+  const { group, position } = userSnapshot.val(); // Destructure for easier access
 
-    // Fetch all notices
-    return database.ref('/notices').orderByKey().once("value").then(noticesSnapshot => {
-      let htmlContent = ''; // Initialize HTML content string
-      
-      noticesSnapshot.forEach(noticeSnapshot => {
-        const { title, text, till, criteria } = noticeSnapshot.val();
-        const now = Date.now();
+  // Access all notices directly from the snapshot
+  const noticesSnapshot = entireDbSnapshot.child('/notices');
 
-        // Check if the notice is still active and if it matches the user's criteria
-        if (now < till && (criteria === 'All' || criteria === position || criteria === group)) {
-          htmlContent += `
-            <div class='event notice'>
-              <b>${title}</b> <br>
-              <span>${text}</span>
-            </div>`;
-        }
-      });
+  let htmlContent = ''; // Initialize HTML content string
+  
+  noticesSnapshot.forEach(noticeSnapshot => {
+    const { title, text, till, timezone, criteria } = noticeSnapshot.val();
+    const now = moment.tz(timezone).valueOf(); // Current time in the event's timezone
 
-      // Update DOM only once with the final HTML content
-      noticesElement.innerHTML = htmlContent || 'No new notices!';
-    });
-  }).catch(error => {
-    console.error("Error fetching notices:", error);
-    noticesElement.innerHTML = 'Failed to load notices.';
+    // Check if the notice is still active and if it matches the user's criteria
+    if (now < till && (criteria === 'All' || criteria === position || criteria === capitalizeFirstLetter(group))) {
+      htmlContent += `
+        <div class='event notice'>
+          <b>${title}</b> <br>
+          <span>${text}</span>
+        </div>`;
+    }
   });
+
+  // Update DOM only once with the final HTML content
+  noticesElement.innerHTML = htmlContent || 'No new notices!';
 }
 
 function showUsefulLinks() {

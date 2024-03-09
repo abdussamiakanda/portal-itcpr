@@ -2,10 +2,9 @@ var provider = new firebase.auth.GoogleAuthProvider();
 var database = firebase.database();
 var userdata = null;
 var emailKey = null;
+let entireDbSnapshot = null;
 
 function sanitizeEmail(email) {
-  // Basic sanitation to replace problematic characters
-  // Firebase keys can't contain '.', '#', '$', '[', or ']'
   return email.replace(/\./g, '');
 }
 
@@ -64,20 +63,25 @@ function GoogleLogout() {
 }
 
 function verified(user){
-  checkUser(user);
-  showTopHeader(user);
+  database.ref().once("value").then(snapshot => {
+    entireDbSnapshot = snapshot;
+  }).catch(error => {
+    console.error("Error loading the entire database: ", error);
+  }).then(() => {
+    checkUser(user);
+    showTopHeader(user);
+  });
 }
 
-function checkUser(user){
-  database.ref('/users/'+ emailKey).orderByKey().once("value").then((snapshot) => {
-    isNew = snapshot.child('new').val();
+function checkUser(user) {
+  const snapshot = entireDbSnapshot.child('/users/'+emailKey);
+  const isNew = snapshot.child('new').val();
 
-    if(isNew === true){
-      showDiv('checklist');
-    }else {
-      showDiv('dashboard');
-    }
-  })
+  if (isNew === true) {
+    showDiv('checklist');
+  } else {
+    showDiv('dashboard');
+  }
 }
 
 function showDiv(div_id){

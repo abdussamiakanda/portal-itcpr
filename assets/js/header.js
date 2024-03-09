@@ -25,7 +25,7 @@ function showHeaderMenu(selectedDiv = '') {
 
   const menuItems = [
     { name: 'DASHBOARD', onclick: "showDiv('dashboard')", id: 'dashboard' },
-    { name: capitalizeFirstLetter(group), onclick: "showDiv('group')", id: 'group' }, // Using id: 'group' for identification
+    { name: group.toUpperCase(), onclick: "showDiv('group')", id: 'group' }, // Using id: 'group' for identification
     { name: 'PEOPLE', onclick: "showDiv('people')", id: 'people' },
     { name: 'ADMIN', onclick: "showDiv('admin')", id: 'admin', allowed: position !== "Intern" && (position !== "Member" || type === 'admin') },
   ];

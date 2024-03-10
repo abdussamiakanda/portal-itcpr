@@ -27,10 +27,67 @@ function showAdmin(div) {
 
 function showAdminTasks() {
   document.getElementById('admin-contents').innerHTML = `
-  <div class="adduser-btn-container"><div class="adduser-btn" onclick="eventDiv()"><i class="fa-solid fa-plus"></i> Add Tasks</div></div>
+  <div class="adduser-btn-container"><div class="adduser-btn" onclick="taskDiv()"><i class="fa-solid fa-plus"></i> Add Tasks</div></div>
   <div id="admin-tasks" class="admin-events"></div>
   `;
   showAdminTask();
+}
+
+function taskDiv() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <input type="text" id="title" placeholder="Enter Task Title..">
+      <textarea id="text" placeholder="Enter Task Text.."></textarea>
+      <select id="quartile" class="dropdown">
+        <option value="">Select Quartile</option>
+        <option value=1>1st Quartile</option>
+        <option value=2>2nd Quartile</option>
+      </select>
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleNewTask('cancel')">Cancel</div>
+        <div class="add" onclick="handleNewTask('add')">Add Task</div>
+      </div>
+    </form>
+  </div>
+  `;
+}
+
+function handleNewTask(what) {
+  if (what === 'add') {
+    var title = document.getElementById('title').value;
+    var text = document.getElementById('text').value;
+    var quartile = document.getElementById('quartile').value;
+
+    const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
+    const { group } = userSnapshot.val();
+
+    database.ref(`/groups/${group}/tasks`).once("value").then(snapshot => {
+      const tasksSnapshot = snapshot.val() || {};
+      const quartileTasks = Object.keys(tasksSnapshot).filter(key => key.startsWith(quartile));
+      const newTaskNumber = quartileTasks.length + 1;
+      const newTaskId = quartile + newTaskNumber;
+
+      const newEvent = {
+        title: title,
+        text: text,
+        quartile: Number(quartile),
+      };
+
+      return database.ref(`/groups/${group}/tasks/${newTaskId}`).update(newEvent);
+    }).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminTasks();
+        alertMessage(t="success","New task added!");
+      })
+    }).catch(error => {
+      console.error("Error updating task in Firebase:", error);
+    });
+  } else {
+    showAdminTasks();
+  }
 }
 
 function showAdminTask() {
@@ -59,6 +116,18 @@ function showAdminTask() {
       </div>`;
   });
   tasksElement.innerHTML = htmlContent || 'No events found!';
+}
+
+
+function deleteTask(group,key) {
+  database.ref('/groups/' + group + '/tasks/' + key).remove().then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showAdminTasks();
+      alertMessage(t="success","Task deleted successfully!");
+    })
+  });
 }
 
 function showAdminEvents() {
@@ -117,6 +186,7 @@ function handleNewEvent(what) {
         entireDbSnapshot = snapshot;
       }).then(() => {
         showAdminEvents();
+        alertMessage(t="success","New event added!");
       })
     }).catch(error => {
       console.error("Error updating event in Firebase:", error);
@@ -181,6 +251,7 @@ function handleNewNotice(what) {
         entireDbSnapshot = snapshot;
       }).then(() => {
         showAdminNotices();
+        alertMessage(t="success","New notice added!");
       })
     }).catch(error => {
       console.error("Error updating notice in Firebase:", error);
@@ -193,7 +264,7 @@ function handleNewNotice(what) {
 
 function showAdminUsers() {
   document.getElementById('admin-contents').innerHTML = `
-  <div class="adduser-btn-container"><div class="adduser-btn"><i class="fa-solid fa-plus"></i> Add User</div></div>
+  <div class="adduser-btn-container"><div class="adduser-btn" onclick="userDiv()"><i class="fa-solid fa-plus"></i> Add User</div></div>
   <div class="users-top">
     <div>NAME</div>
     <div>POSITION</div>
@@ -204,6 +275,105 @@ function showAdminUsers() {
   <div id="admin-users"></div>
   `;
   showAdminUser();
+}
+
+function userDiv() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <input type="text" id="name" placeholder="Enter User Name..">
+      <input type="text" id="email" placeholder="Enter User Email..">
+      <input type="text" id="id" placeholder="Enter User ID..">
+      <select id="position" class="dropdown">
+        <option value="">Select User Type</option>
+        <option value="Intern">Intern</option>
+        <option value="Member">Member</option>
+      </select>
+      <select id="usrgroup" class="dropdown">
+        <option value="">Select Group</option>
+        <option value="spintronics">Spintronics</option>
+        <option value="photonics">Photonics</option>
+      </select>
+      <select id="quartile" class="dropdown">
+        <option value="">Select Quartile</option>
+        <option value=1>1st Quartile</option>
+        <option value=2>2nd Quartile</option>
+      </select>
+      <input type="text" id="start" placeholder="Enter Start Date..">
+      <input type="text" id="end" placeholder="Enter End Date..">
+      <input type="text" id="url" placeholder="Enter User URL..">
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleNewUser('cancel')">Cancel</div>
+        <div class="add" onclick="handleNewUser('add')">Add User</div>
+      </div>
+    </form>
+  </div>
+  `;
+}
+
+function handleNewUser(what) {
+  if (what === 'add') {
+    var name = document.getElementById('name').value;
+    var id = document.getElementById('id').value;
+    var email = document.getElementById('email').value;
+    var group = document.getElementById('usrgroup').value;
+    var position = document.getElementById('position').value;
+    var quartile = document.getElementById('quartile').value;
+    var start = document.getElementById('start').value;
+    var end = document.getElementById('end').value;
+    var url = document.getElementById('url').value;
+
+    const newUser = {
+      name: name,
+      id: id,
+      group: group,
+      position: position,
+      quartile: quartile,
+      start: start,
+      end: end,
+      url: url,
+      attendance: '0/0',
+      participation: '0/0',
+      email: id+'@itcpr.org',
+      new: true,
+    };
+
+    database.ref("/users/" + email.replace("@gmail.com", "")).update(newUser).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminUsers();
+        alertMessage(t="success","New user added!");
+      })
+    }).catch(error => {
+      console.error("Error updating notice in Firebase:", error);
+    });
+  } else {
+    showAdminUsers();
+  }
+}
+
+function showAdminUser() {
+  const userElement = document.getElementById('admin-users');
+  userElement.innerHTML = '';
+
+  const usersSnapshot = entireDbSnapshot.child(`/users`);
+
+  let htmlContent = '';
+  
+  usersSnapshot.forEach(userSnapshot => {
+    const { name, position, group, quartile } = userSnapshot.val();
+
+    htmlContent += `
+      <div class="admin-user">
+        <div>${name}</div>
+        <div>${position}</div>
+        <div>${capitalizeFirstLetter(group)}</div>
+        <div>${quartile === 1 ? '1st' : '2nd'} Quartile</div>
+        <div>${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}</div>
+      </div>`;
+  });
+  userElement.innerHTML = htmlContent || 'No users found!';
 }
 
 function showAdminEvent() {
@@ -309,7 +479,7 @@ function showAdminEventUsers(type, key) {
   userElement.innerHTML = htmlContent || 'No users found!';
 }
 
-function  handlePerformance(type,group,event,user,value) {
+function handlePerformance(type,group,event,user,value) {
   if (type === 'att') {
     const updateValue = {
       attendance: value,
@@ -470,27 +640,4 @@ function deleteNotice(key) {
       alertMessage(t="success","Notice deleted successfully!");
     })
   });
-}
-
-function showAdminUser() {
-  const userElement = document.getElementById('admin-users');
-  userElement.innerHTML = '';
-
-  const usersSnapshot = entireDbSnapshot.child(`/users`);
-
-  let htmlContent = '';
-  
-  usersSnapshot.forEach(userSnapshot => {
-    const { name, position, group, quartile } = userSnapshot.val();
-
-    htmlContent += `
-      <div class="admin-user">
-        <div>${name}</div>
-        <div>${position}</div>
-        <div>${capitalizeFirstLetter(group)}</div>
-        <div>${quartile === 1 ? '1st' : '2nd'} Quartile</div>
-        <div>${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square"></i>` : ''}</div>
-      </div>`;
-  });
-  userElement.innerHTML = htmlContent || 'No users found!';
 }

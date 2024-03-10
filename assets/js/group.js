@@ -22,29 +22,35 @@ function showGroup() {
 
 function showGroupTasks() {
   const eventsElement = document.getElementById('group-tasks');
-  // Clear the container once
+  
   eventsElement.innerHTML = '';
-
-  // Directly access the user's group from the snapshot
-  const groupSnapshot = entireDbSnapshot.child('users/' + emailKey).child('group');
-  const group = groupSnapshot.val();
-
-  // Directly access the tasks for the user's group from the snapshot
+  
+  const groupSnapshot = entireDbSnapshot.child('users/' + emailKey);
+  const group = groupSnapshot.child('group').val();
+  const quart = groupSnapshot.child('quartile').val();
+  const position = groupSnapshot.child('position').val();
   const tasksSnapshot = entireDbSnapshot.child('/groups/' + group + '/tasks');
 
-  let htmlContent = ''; // Initialize an empty string to build the HTML
+  let htmlContent = '';
 
   tasksSnapshot.forEach(childSnapshot => {
-    const { title, text } = childSnapshot.val();
+    const { title, text, quartile } = childSnapshot.val();
 
-    htmlContent += `
-    <div class="group-task">
-      <b onclick="handleGroupTask('${childSnapshot.key}')">${title}  <i class="fa-solid fa-chevron-right" id="arrow-${childSnapshot.key}"></i></b>
-      <div id="task-${childSnapshot.key}">${text}</div>
-    </div>`;
+    if (quart === quartile && position === 'Intern') {
+      htmlContent += `
+      <div class="group-task">
+        <b onclick="handleGroupTask('${childSnapshot.key}')">${title}  <i class="fa-solid fa-chevron-right" id="arrow-${childSnapshot.key}"></i></b>
+        <div id="task-${childSnapshot.key}">${text}</div>
+      </div>`;
+    } else if (position !== 'Intern') {
+      htmlContent += `
+      <div class="group-task">
+        <b onclick="handleGroupTask('${childSnapshot.key}')">${title}  <i class="fa-solid fa-chevron-right" id="arrow-${childSnapshot.key}"></i></b>
+        <div id="task-${childSnapshot.key}">${text}</div>
+      </div>`;
+    }
   });
-
-  // Update the DOM once after building the HTML string
+  
   eventsElement.innerHTML = htmlContent || 'No tasks yet!!';
 }
 
@@ -67,7 +73,7 @@ function handleGroupTask(key) {
 }
 
 function showGroupPeople() {
-  const mygroup = entireDbSnapshot.child('/users/' + emailKey + '/group').val(); // Directly assign the group value
+  const mygroup = entireDbSnapshot.child('/users/' + emailKey + '/group').val();
 
   let htmlContent1 = '';
   let htmlContent2 = '';
@@ -94,7 +100,7 @@ function showGroupPeople() {
 
       targetHtmlContent += `
       <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="${name}">
+        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="${name}">
         <div>
           <b>${name}</b> <br>
           ${position}, ${capitalizeFirstLetter(group)} Group
@@ -104,8 +110,7 @@ function showGroupPeople() {
           </div>
         </div>
       </div>`;
-
-      // Reassign the updated content back to the original variables
+      
       if (position === 'Lead') {
         htmlContent1 = targetHtmlContent;
       } else if (position === 'Member') {
@@ -115,15 +120,8 @@ function showGroupPeople() {
       }
     }
   });
-
-  // Ensure the correct sections are updated
+  
   document.getElementById('group-lead').innerHTML = htmlContent1;
   document.getElementById('group-member').innerHTML = htmlContent2;
   document.getElementById('group-intern').innerHTML = htmlContent3;
 }
-
-
-
-
-
-

@@ -37,7 +37,7 @@ function showPeople() {
     if (emailKey !== childSnapshot.key && position !== 'Terminated') {
       document.getElementById('allpeople').innerHTML += `
       <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
+        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
         <div>
           <b>${name}</b> <br>
           ${position}, ${capitalizeFirstLetter(group)} Group
@@ -74,7 +74,7 @@ function applyFilters() {
     if (emailKey !== childSnapshot.key && position !== 'Terminated' && matchesGroupFilter && matchesPositionFilter) {
       htmlContent += `
       <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" alt="">
+        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
         <div>
           <b>${name}</b> <br>
           ${position}, ${capitalizeFirstLetter(group)} Group

@@ -33,8 +33,9 @@ function verifyUser(user){
   var email = user.email
   database.ref('/users').orderByKey().once("value").then((snapshot) => {
     isEmail = snapshot.child(sanitizeEmail(email.replace("@gmail.com", ""))).exists();
+    const position = snapshot.child(sanitizeEmail(email.replace("@gmail.com", ""))+"/position").val();
 
-    if(isEmail === true){
+    if(isEmail === true && position !== "Terminated"){
       verified(user);
     }else {
       showDiv('login');

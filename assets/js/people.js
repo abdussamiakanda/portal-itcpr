@@ -66,11 +66,9 @@ function applyFilters() {
     var email = childSnapshot.child("email").val();
     var url = childSnapshot.child("url").val();
 
-    // Determine if the current childSnapshot should be filtered based on dropdown values
     var matchesGroupFilter = drop1 === "" || drop1 === capitalizeFirstLetter(group);
-    var matchesPositionFilter = drop2 === "" || drop2 === position;
+    var matchesPositionFilter = drop2 === "" || (drop2 === "Intern" && position === "Intern") || (drop2 !== "" && drop2 !== "Intern" && position !== "Intern");
 
-    // Exclude the current user (emailKey) and terminated positions from being shown
     if (emailKey !== childSnapshot.key && position !== 'Terminated' && matchesGroupFilter && matchesPositionFilter) {
       htmlContent += `
       <div class="people">
@@ -87,7 +85,6 @@ function applyFilters() {
     }
   });
 
-  // Update the HTML content with filtered users or indicate no users matched if htmlContent is still empty
   document.getElementById('allpeople').innerHTML = htmlContent || 'No matched user found!';
 }
 

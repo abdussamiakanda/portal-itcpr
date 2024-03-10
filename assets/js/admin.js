@@ -338,7 +338,7 @@ function handleNewUser(what) {
       new: true,
     };
 
-    database.ref("/users/" + email.replace("@gmail.com", "")).update(newUser).then(() => {
+    database.ref("/users/" + sanitizeEmail(email.replace("@gmail.com", ""))).update(newUser).then(() => {
       database.ref().once("value").then(snapshot => {
         entireDbSnapshot = snapshot;
       }).then(() => {
@@ -346,7 +346,7 @@ function handleNewUser(what) {
         alertMessage(t="success","New user added!");
       })
     }).catch(error => {
-      console.error("Error updating notice in Firebase:", error);
+      console.error("Error updating user in Firebase:", error);
     });
   } else {
     showAdminUsers();

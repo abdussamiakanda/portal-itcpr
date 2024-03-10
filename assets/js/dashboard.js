@@ -95,18 +95,16 @@ function showEvents() {
           <span class='time'>${eventTime}</span>
           <span class='event-icons'>
             <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
-            <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
+            ${attachment ? `<i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>` : ''}
           </span>
         </div>`;
     }
   });
 
-  // Update the DOM once after building the HTML string
   eventsElement.innerHTML = htmlContent || 'No upcoming events!';
 }
 
 function showPerformances() {
-  // Directly access the user's data from the snapshot
   const userSnapshot = entireDbSnapshot.child('users/' + emailKey);
 
   const attendanceRaw = userSnapshot.child('attendance').val() || '0/0';
@@ -115,7 +113,6 @@ function showPerformances() {
   const attendance = attendanceRaw.split('/').map(Number);
   const participation = participationRaw.split('/').map(Number);
 
-  // Building HTML content for performance
   const performancesHTML = `
     <div class='performances'>
       <div class='performance' id='performance1'>
@@ -128,10 +125,8 @@ function showPerformances() {
       </div>
     </div>`;
 
-  // Update the DOM once
   document.getElementById('performances').innerHTML = performancesHTML;
 
-  // Prepare data for charts
   const data1 = [
     { label: 'Missed', percent: attendance[0] },
     { label: 'Attended', percent: Math.max(0, attendance[1] - attendance[0]) },

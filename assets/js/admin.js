@@ -47,9 +47,15 @@ function showAdminTask() {
     const { title, text } = taskSnapshot.val();
 
     htmlContent += `
-      <div class='admin-event'>
-        <b>${title}</b> <br>
-        <span>${text}</span>
+      <div class='admin-event flex'>
+        <div>
+          <h3>${title}</h3>
+          <span>${text.substring(0, 150)} ...</span>
+        </div>
+        <div class="admin-icons">
+          <i class="fa-solid fa-eye delete" onclick="showDetail('task', '${taskSnapshot.key}')"></i>
+          <i class="fa-solid fa-trash-can delete" onclick="deleteTask('${group}', '${taskSnapshot.key}')"></i>
+        </div>
       </div>`;
   });
   tasksElement.innerHTML = htmlContent || 'No events found!';
@@ -214,16 +220,168 @@ function showAdminEvent() {
     const { title, time, meeting, attachment, timezone } = noticeSnapshot.val();
 
     htmlContent += `
-      <div class='admin-event'>
-        <b>${title}</b> <br>
-        <span class='time'>${convertToLocalTime(time, timezone)}</span>
-        <span class='event-icons'>
-          <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
-          <i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>
-        </span>
+      <div class='admin-event flex'>
+        <div>
+          <h3>${title}</h3>
+          <span class='time'>${convertToLocalTime(time, timezone)}</span>
+          <span class='event-icons'>
+            <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
+            ${attachment ? `<i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>` : ''}
+          </span>
+        </div>
+        <div class="admin-icons">
+          <i class="fa-solid fa-eye delete" onclick="showEventDetail('${group}', '${noticeSnapshot.key}')"></i>
+          <i class="fa-solid fa-trash-can delete" onclick="deleteEvent('${group}', '${noticeSnapshot.key}')"></i>
+        </div>
       </div>`;
   });
   noticesElement.innerHTML = htmlContent || 'No events found!';
+}
+
+function showEventDetail(group,key) {
+  const noticesSnapshot = entireDbSnapshot.child('/groups/' + group + '/events/' + key);
+  const { title, time, meeting, attachment, timezone } = noticesSnapshot.val();
+
+  document.getElementById('admin-contents').innerHTML = `
+  <div class='admin-events'>
+    <div>
+      <div class="users-top">
+        <div>NAME</div>
+        <div>POSITION</div>
+        <div>ATTENDANCE</div>
+        <div>PARTICIPATION</div>
+      </div>
+      <div id="admin-users"></div>
+    </div>
+    <div class='admin-event'>
+      <h3>${title}</h3>
+      <span class='time'>${convertToLocalTime(time, timezone)}</span>
+      <span class='event-icons'>
+        <i class="fa-solid fa-video" onclick="goToExternal('${meeting}')"> Google Meet</i>
+        ${attachment ? `<i class="fa-solid fa-paperclip" onclick="goToExternal('${attachment}')"> Attachment</i>` : ''}
+      </span>
+    </div>
+    <div class="go-back" onclick="showAdminEvents()">Go Back</div>
+  </div>`;
+  showAdminEventUsers(group, key);
+}
+
+function showAdminEventUsers(type, key) {
+  const userElement = document.getElementById('admin-users');
+  userElement.innerHTML = '';
+
+  const usersSnapshot = entireDbSnapshot.child(`/users`);
+
+  let htmlContent = '';
+  
+  usersSnapshot.forEach(userSnapshot => {
+    const { name, position, group } = userSnapshot.val();
+    const performSnapshot = entireDbSnapshot.child('/groups/' + type + '/events/' + key + '/gigs/' + userSnapshot.key);
+    const { attendance, participation } = performSnapshot.val()  || {};
+    let attcont = '';
+    let partcont = '';
+
+    if (attendance === undefined) {
+      attcont = `<i class="fa-solid fa-check perform-btn" onclick="handlePerformance('att','${type}','${key}','${userSnapshot.key}',true)"></i> <i class="fa-solid fa-xmark perform-btn" onclick="handlePerformance('att','${type}','${key}','${userSnapshot.key}',false)"></i>`
+    } else if (attendance === true) {
+      attcont = `<i class="fa-solid fa-check"></i></i>`
+    } else if (attendance === false) {
+      attcont = `<i class="fa-solid fa-xmark"></i>`
+    }
+    if (participation === undefined) {
+      partcont = `<i class="fa-solid fa-check perform-btn" onclick="handlePerformance('part','${type}','${key}','${userSnapshot.key}',true)"></i> <i class="fa-solid fa-xmark perform-btn" onclick="handlePerformance('part','${type}','${key}','${userSnapshot.key}',false)"></i>`
+    } else if (participation === true) {
+      partcont = `<i class="fa-solid fa-check"></i></i>`
+    } else if (participation === false) {
+      partcont = `<i class="fa-solid fa-xmark"></i>`
+    }
+
+    if (type === group) {
+      htmlContent += `
+      <div class="admin-user usr-perform">
+        <div>${name}</div>
+        <div>${position}</div>
+        <div>${attcont}</div>
+        <div>${partcont}</div>
+      </div>`;
+    }
+  });
+  userElement.innerHTML = htmlContent || 'No users found!';
+}
+
+function  handlePerformance(type,group,event,user,value) {
+  if (type === 'att') {
+    const updateValue = {
+      attendance: value,
+    };
+
+    database.ref('/groups/' + group + '/events/' + event + '/gigs/' + user).update(updateValue).then(() => {
+      const userSnapshot = entireDbSnapshot.child(`/users/`+user);
+      const attendanceRaw = userSnapshot.child('attendance').val() || '0/0';
+      let [left, right] = attendanceRaw.split('/').map(Number);
+
+      if (value === false) {
+        left += 1;
+        right += 1;
+      } else if (value === true) {
+        right += 1;
+      }
+      const updatedAttendance = {
+        attendance: left+'/'+right,
+      }
+
+      database.ref(`/users/`+user).update(updatedAttendance).then(() => {
+        database.ref().once("value").then(snapshot => {
+          entireDbSnapshot = snapshot;
+        }).then(() => {
+          showAdminEventUsers(group, event);
+        })
+      })
+    }).catch(error => {
+      console.error("Error updating in Firebase:", error);
+    });
+  } else if (type === 'part') {
+    const updateValue = {
+      participation: value,
+    };
+
+    database.ref('/groups/' + group + '/events/' + event + '/gigs/' + user).update(updateValue).then(() => {
+      const userSnapshot = entireDbSnapshot.child(`/users/`+user);
+      const participationRaw = userSnapshot.child('participation').val() || '0/0';
+      let [left, right] = participationRaw.split('/').map(Number);
+
+      if (value === false) {
+        left += 1;
+        right += 1;
+      } else if (value === true) {
+        right += 1;
+      }
+      const updatedParticipation = {
+        participation: left+'/'+right,
+      }
+
+      database.ref(`/users/`+user).update(updatedParticipation).then(() => {
+        database.ref().once("value").then(snapshot => {
+          entireDbSnapshot = snapshot;
+        }).then(() => {
+          showAdminEventUsers(group, event);
+        })
+      })
+    }).catch(error => {
+      console.error("Error updating in Firebase:", error);
+    });
+  }
+}
+
+function deleteEvent(group, key) {
+  database.ref('/groups/' + group + '/events/'+key).remove().then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showAdminEvents();
+      alertMessage(t="success","Event deleted successfully!");
+    })
+  });
 }
 
 function convertToLocalTime(time, timezone) {
@@ -248,13 +406,70 @@ function showAdminNotice() {
 
     if (criteria === capitalizeFirstLetter(group)) {
       htmlContent += `
-        <div class='admin-event'>
-          <b>${title}</b> <br>
-          <span>${text}</span>
+        <div class='admin-event flex'>
+          <div>
+            <h3>${title}</h3>
+            <span>${text.substring(0, 150)} ...</span>
+          </div>
+          <div class="admin-icons">
+            <i class="fa-solid fa-eye delete" onclick="showDetail('notice', '${noticeSnapshot.key}')"></i>
+            <i class="fa-solid fa-trash-can delete" onclick="deleteNotice('${noticeSnapshot.key}')"></i>
+          </div>
         </div>`;
     }
   });
   noticesElement.innerHTML = htmlContent || 'No notices found!';
+}
+
+function showDetail(type, key) {
+  if (type === 'notice') {
+    const noticesSnapshot = entireDbSnapshot.child('/notices/'+key);
+    const { title, text } = noticesSnapshot.val();
+
+    document.getElementById('detail').innerHTML = `
+      <div class="details">
+        <div class="detail">
+          <div class="detail-top"><i class="fa-solid fa-xmark" onclick="hideDetail()"></i></div>
+          <div class="detail-content">
+            <span class="type">Notice</span>
+            <h3>${title}</h3> <br>
+            <span>${text}</span>
+          </div>
+        </div>
+      </div>`;
+  } else if (type === 'task') {
+    const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
+    const { group } = userSnapshot.val();
+    const tasksSnapshot = entireDbSnapshot.child('/groups/' + group + '/tasks/' + key);
+    const { title, text } = tasksSnapshot.val();
+  
+    document.getElementById('detail').innerHTML = `
+      <div class="details">
+        <div class="detail">
+          <div class="detail-top"><i class="fa-solid fa-xmark" onclick="hideDetail()"></i></div>
+          <div class="detail-content">
+            <span class="type">Task</span>
+            <h3>${title}</h3> <br>
+            <span>${text}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+function hideDetail() {
+  document.getElementById('detail').innerHTML = '';
+}
+
+function deleteNotice(key) {
+  database.ref('/notices/' + key).remove().then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showAdminNotices();
+      alertMessage(t="success","Notice deleted successfully!");
+    })
+  });
 }
 
 function showAdminUser() {

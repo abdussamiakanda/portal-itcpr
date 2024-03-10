@@ -369,7 +369,7 @@ function showAdminUser() {
         <div>${name}</div>
         <div>${position}</div>
         <div>${capitalizeFirstLetter(group)}</div>
-        <div>${quartile === 1 ? '1st' : '2nd'} Quartile</div>
+        <div>${position === 'Intern' ? `${quartile === '1' ? '1st' : '2nd'} Quartile` : ''}</div>
         <div>${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}</div>
       </div>`;
   });

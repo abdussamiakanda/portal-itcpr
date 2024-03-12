@@ -17,7 +17,6 @@ function showTopHeader(){
 }
 
 function showHeaderMenu(selectedDiv = '') {
-  // Directly access the user data from the snapshot
   const userSnapshot = entireDbSnapshot.child('/users/' + emailKey);
   const position = userSnapshot.child('position').val();
   const group = userSnapshot.child('group').val();
@@ -25,16 +24,15 @@ function showHeaderMenu(selectedDiv = '') {
 
   const menuItems = [
     { name: 'DASHBOARD', onclick: "showDiv('dashboard')", id: 'dashboard' },
-    { name: group.toUpperCase(), onclick: "showDiv('group')", id: 'group' }, // Using id: 'group' for identification
+    { name: group.toUpperCase(), onclick: "showDiv('group')", id: 'group' },
     { name: 'PEOPLE', onclick: "showDiv('people')", id: 'people' },
     { name: 'ADMIN', onclick: "showDiv('admin')", id: 'admin', allowed: position !== "Intern" && (position !== "Member" || type === 'admin') },
   ];
 
   const pcMenu = document.getElementById('pc-menu');
   pcMenu.innerHTML = menuItems
-    .filter(item => item.allowed !== false) // Filters out any items where allowed is explicitly set to false
+    .filter(item => item.allowed !== false)
     .map(item => {
-      // Use item.id to determine if this item is selected
       const isSelected = item.id === selectedDiv;
       const itemClass = isSelected ? ' selected' : '';
       return `<div class="menu-item${itemClass}" onclick="${item.onclick}">${item.name}</div>`;

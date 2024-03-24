@@ -28,7 +28,7 @@ function showChecklist() {
             <li>Install Discord on your devices, e.g., laptop, or smartphone.</li>
             <li>Be sure to have your nickname as the username on the server.</li>
             <li>Check frequently and daily for updates.</li>
-            <li>Join our discord server: </li>
+            <li>Join our discord server: <a href="https://discord.gg/bfCJQvQybU" target="_blank">https://discord.gg/bfCJQvQybU</a></li>
           </ul>
         </div>
       </div>

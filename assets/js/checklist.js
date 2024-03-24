@@ -12,9 +12,10 @@ function showChecklist() {
       <div class="item">
         <input type="checkbox" id="task1" name="task1" onchange="handleCheck()"/>
         <div>
-          <h3>Setup Institutional Email</h3>
+          <h3>Setup Email Box</h3>
           <ul>
-            <li>Check your email</li>
+            <li>Check your email and make sure you're added to two google groups.</li>
+            <li>One for your position at ITCPR and another for your research group.</li>
           </ul>
         </div>
       </div>

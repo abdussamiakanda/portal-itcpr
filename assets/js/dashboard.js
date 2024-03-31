@@ -63,7 +63,8 @@ function showInformations() {
     <b>Research Group:</b> ${groupData.name} <br>
     <b>Group Lead:</b> ${groupData.lead}
     ${userData.position === 'Intern' ? '<br> <b>Program Duration:</b> ' + userData.start + ' - ' + userData.end : ''}
-    <br> <b>Email:</b> ${userData.email}`;
+    `;
+    // <br> <b>Email:</b> ${userData.iemail}
 
   document.getElementById('informations').innerHTML = htmlContent;
 }

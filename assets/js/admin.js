@@ -81,6 +81,7 @@ function handleNewTask(what) {
       }).then(() => {
         showAdminTasks();
         alertMessage(t="success","New task added!");
+        sendBulkEmail(group, 'task', title);
       })
     }).catch(error => {
       console.error("Error updating task in Firebase:", error);
@@ -187,6 +188,7 @@ function handleNewEvent(what) {
       }).then(() => {
         showAdminEvents();
         alertMessage(t="success","New event added!");
+        sendBulkEmail(group, 'event', title);
       })
     }).catch(error => {
       console.error("Error updating event in Firebase:", error);
@@ -252,6 +254,7 @@ function handleNewNotice(what) {
       }).then(() => {
         showAdminNotices();
         alertMessage(t="success","New notice added!");
+        sendBulkEmail(group, 'notice', title);
       })
     }).catch(error => {
       console.error("Error updating notice in Firebase:", error);
@@ -334,9 +337,32 @@ function handleNewUser(what) {
       url: url,
       attendance: '0/0',
       participation: '0/0',
-      email: id+'@itcpr.org',
+      iemail: id+'@itcpr.org',
+      email: email,
       new: true,
     };
+
+    const body = `Dear ${name},<br><br>
+    We are delighted to welcome you to the Institute for Theoretical and
+    Computational Physics Research (ITCPR). As a pioneering virtual
+    institution, ITCPR is dedicated to breaking new ground in theoretical
+    and computational physics, providing unique research opportunities
+    that propel untapped talent into the forefront of scientific innovation.
+    <br><br>
+    At ITCPR, you will immerse yourself in a vibrant scientific community,
+    receive mentorship from seasoned professionals, and engage in cutting-edge
+    research that expands the boundaries of knowledge. We are here to support
+    your journey of professional growth, innovation, and discovery.
+    <br><br>
+    We encourage you to explore our latest initiatives, participate in our
+    groups, and take the first steps towards making significant contributions
+    to the world of physics. Welcome aboard, and we look forward to seeing
+    the impact of your work.
+    <br><br>
+    Warm regards, <br>
+    Administrative Team <br>
+    Institute for Theoretical and Computational Physics Research (ITCPR)
+    `;
 
     database.ref("/users/" + sanitizeEmail(email.replace("@gmail.com", ""))).update(newUser).then(() => {
       database.ref().once("value").then(snapshot => {
@@ -344,6 +370,7 @@ function handleNewUser(what) {
       }).then(() => {
         showAdminUsers();
         alertMessage(t="success","New user added!");
+        sendEmail(email, "Welcome to ITCPR - Your Gateway to Innovation in Physics!", body);
       })
     }).catch(error => {
       console.error("Error updating user in Firebase:", error);

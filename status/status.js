@@ -6,7 +6,7 @@ function updateContent() {
   fetch('http://10.144.162.80/status.html')
     .then(response => response.text())
     .then(data => {
-      document.getElementById('status').innerHTML = data;
+      document.getElementById('body').innerHTML = data;
     })
     .catch(console.error);
 }

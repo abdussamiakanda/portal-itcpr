@@ -209,8 +209,9 @@ function showUsefulLinks() {
     { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
     { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
     { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
+    { url: 'http://10.144.162.80/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
   ];
-
+  
   const usefulLinksElement = document.getElementById('useful-links');
   usefulLinksElement.innerHTML = links.map(link => `
     <div class="icon" onclick="goToExternal('${link.url}')">

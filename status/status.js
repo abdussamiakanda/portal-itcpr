@@ -3,7 +3,7 @@ function goToExternal(path) {
 }
 
 function updatePageContent() {
-  fetch('path/to/your/updatedPage.html')
+  fetch('http://10.144.162.80/status.html')
     .then(response => response.text())
     .then(data => {
       document.documentElement.innerHTML = data;

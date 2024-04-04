@@ -2,13 +2,14 @@ function goToExternal(path) {
   window.open(path, "_blank");
 }
 
-function updatePageContent() {
-  fetch('http://10.144.162.80/status.html')
+function updateContent() {
+  
     .then(response => response.text())
     .then(data => {
-      document.documentElement.innerHTML = data;
+      document.getElementById('status').innerHTML = data;
     })
     .catch(console.error);
 }
 
-setInterval(updatePageContent, 1000); 
+// Poll for changes every 5 seconds
+setInterval(updateContent, 1000);

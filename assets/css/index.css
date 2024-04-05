@@ -176,23 +176,29 @@
     font-size: 16px;
   }
 
+  .tab .group-tasks {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .tab .group-task {
     padding: 0px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
   }
   .group-task b {
     display: block;
     padding: 5px 10px;
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
     font-size: 18px;
     cursor: pointer;
   }
   .group-task b:hover {
     box-shadow: 0px 0px 4px black;
+    border-radius: 5px;
   }
   .group-task div {
     display: none;
-    padding: 10px 10px 20px 10px;
+    padding: 20px 10px;
   }
 
 
@@ -671,7 +677,24 @@
     from {top: 20px; opacity: 1;}
     to {top: 0; opacity: 0;}
   }
+  .phone {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 0em) and (max-width: 40em) {
+  .top{
+    padding: 50px;
+  }
+  .academic1 {
+    display: none;
+  }
+  .phone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px auto;
+    width: 100%;
+    padding-bottom: 50px;
+  }
 }

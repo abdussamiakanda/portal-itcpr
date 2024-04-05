@@ -3,7 +3,7 @@ function goToExternal(path) {
 }
 
 function updateContent() {
-  fetch('http://10.144.162.80/status.html')
+  fetch('http://server.itcpr.org/status.html')
     .then(response => response.text())
     .then(data => {
       document.getElementById('body').innerHTML = data;
@@ -11,5 +11,4 @@ function updateContent() {
     .catch(console.error);
 }
 
-// Poll for changes every 5 seconds
 setInterval(updateContent, 1000);

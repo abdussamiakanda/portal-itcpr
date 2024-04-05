@@ -5,7 +5,7 @@ var emailKey = null;
 let entireDbSnapshot = null;
 
 function sanitizeEmail(email) {
-  return email.replace(/\./g, '');
+  return email.replace(/[^a-zA-Z]/g, '');
 }
 
 function GoogleLogin() {

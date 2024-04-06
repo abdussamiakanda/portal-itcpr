@@ -214,7 +214,7 @@ function showUsefulLinks() {
     links = [
       { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
       // { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
-      { url: 'https://itcpr.org/post/getting_started', iconClass: 'fa-solid fa-person-snowboarding', text: 'Kickstart' },
+      { url: 'https://itcpr.org/post/getting_started_with_spintronics', iconClass: 'fa-solid fa-person-snowboarding', text: 'Kickstart' },
       { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
       { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
     ];

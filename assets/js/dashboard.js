@@ -36,7 +36,7 @@ function showDashboard() {
   showEvents();
   showPerformances();
   showNotices();
-  showUsefulLinks()
+  showUsefulLinks();
 }
 
 function showInformations() {
@@ -205,14 +205,31 @@ function showNotices() {
 }
 
 function showUsefulLinks() {
-  const links = [
-    { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
-    // { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
-    { url: 'https://itcpr.org/post/getting_started', iconClass: 'fa-solid fa-person-snowboarding', text: 'Kickstart' },
-    { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
-    { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
-  ];
+  const userSnapshot = entireDbSnapshot.child('/users/' + emailKey);
+  const group = userSnapshot.child('group').val();
 
+  let links = [];
+
+  if (group === 'spintronics') {
+    links = [
+      { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
+      // { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
+      { url: 'https://itcpr.org/post/getting_started', iconClass: 'fa-solid fa-person-snowboarding', text: 'Kickstart' },
+      { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
+      { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
+    ];
+  } else {
+    links = [
+      { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
+      // { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
+      { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
+      { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
+    ];
+  }
+  proceed_links(links);
+}
+
+function proceed_links(links) {
   const usefulLinksElement = document.getElementById('useful-links');
   usefulLinksElement.innerHTML = links.map(link => `
     <div class="icon" onclick="goToExternal('${link.url}')">
@@ -228,7 +245,6 @@ function alertMessage(type = "success", message) {
   const alertSection = document.getElementById("alerts");
   alertSection.innerHTML = message;
 
-  // Clear existing timeout to prevent immediate removal from previous alert
   clearTimeout(alertTimeout);
 
   alertSection.classList.add(type === "success" ? "show-alerts-success" : "show-alerts-danger");

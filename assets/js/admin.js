@@ -49,6 +49,8 @@ function projectDiv() {
     </form>
   </div>
   `;
+  const textarea = document.getElementById('text');
+  textarea.addEventListener('input', autoResize, false);
 }
 
 function handleNewProject(what) {

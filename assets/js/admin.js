@@ -575,11 +575,34 @@ function showAdminEvent() {
         </div>
         <div class="admin-icons">
           <i class="fa-solid fa-eye delete" onclick="showEventDetail('${group}', '${noticeSnapshot.key}')"></i>
+          <i class="fa-solid fa-copy delete" onclick="showEventDuplicate('${group}', '${noticeSnapshot.key}')"></i>
           <i class="fa-solid fa-trash-can delete" onclick="deleteEvent('${group}', '${noticeSnapshot.key}')"></i>
         </div>
       </div>`;
   });
   noticesElement.innerHTML = htmlContent || 'No events found!';
+}
+
+function showEventDuplicate(group,key) {
+  const noticesSnapshot = entireDbSnapshot.child('/groups/' + group + '/events/' + key);
+  const { title, meeting, attachment } = noticesSnapshot.val();
+
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <div class="form-top">
+        <input type="text" id="title" value="${title}">
+        <input type="datetime-local" id="time">
+      </div>
+      <input type="text" id="meeting" value="${meeting}">
+      <input type="text" id="attachment" value="${attachment}">
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleNewEvent('cancel')">Cancel</div>
+        <div class="add" onclick="handleNewEvent('add')">Add Event</div>
+      </div>
+    </form>
+  </div>
+  `;
 }
 
 function showEventDetail(group,key) {

@@ -8,6 +8,10 @@ function showGroup() {
         <div id='group-tasks' class='events'></div>
       </div>
       <div class="tab">
+        <h2>Ongoing Projects</h2>
+        <div id='group-projects' class='events'></div>
+      </div>
+      <div class="tab">
         <h2>Group People</h2>
         <div id='group-lead' class='group-people'></div>
         <div id='group-member' class='group-people'></div>
@@ -18,6 +22,31 @@ function showGroup() {
   </div>`;
   showGroupTasks();
   showGroupPeople();
+  showGroupProjects();
+}
+
+function showGroupProjects() {
+  const eventsElement = document.getElementById('group-projects');
+  
+  eventsElement.innerHTML = '';
+  
+  const groupSnapshot = entireDbSnapshot.child('users/' + emailKey);
+  const group = groupSnapshot.child('group').val();
+  const projectsSnapshot = entireDbSnapshot.child('/groups/' + group + '/projects');
+
+  let htmlContent = '';
+
+  projectsSnapshot.forEach(childSnapshot => {
+    const { title, text } = childSnapshot.val();
+
+    htmlContent += `
+      <div class="">
+        <h3 onclick="handleGroupTask('${childSnapshot.key}')">Project: ${title}</h3>
+        <div id="task-${childSnapshot.key}"><md-block>${text}</md-block></div>
+      </div>`;
+  });
+  
+  eventsElement.innerHTML = htmlContent || 'No projects yet!!';
 }
 
 function showGroupTasks() {

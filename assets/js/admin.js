@@ -7,6 +7,7 @@ function showAdmin(div) {
     <div class="admin-top">
       <div class="${div === 'events' ? 'selected' : ''}" onclick="showAdmin('events')">EVENTS</div>
       <div class="${div === 'tasks' ? 'selected' : ''}" onclick="showAdmin('tasks')">TASKS</div>
+      <div class="${div === 'projects' ? 'selected' : ''}" onclick="showAdmin('projects')">PROJECTS</div>
       <div class="${div === 'notices' ? 'selected' : ''}" onclick="showAdmin('notices')">NOTICES</div>
       ${type === 'admin' ? `<div class="${div === 'users' ? 'selected' : ''}" onclick="showAdmin('users')">USERS</div>` : ''}
     </div>
@@ -22,8 +23,102 @@ function showAdmin(div) {
     showAdminUsers();
   } else if (div === 'tasks') {
     showAdminTasks();
+  } else if (div === 'projects') {
+    showAdminProjects();
   }
 }
+
+function showAdminProjects() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div class="adduser-btn-container"><div class="adduser-btn" onclick="projectDiv()"><i class="fa-solid fa-plus"></i> Add Project</div></div>
+  <div id="admin-projects" class="admin-events"></div>
+  `;
+  showAdminProject();
+}
+
+function projectDiv() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <input type="text" id="title" placeholder="Enter Project Title..">
+      <textarea id="text" placeholder="Enter Project Text.."></textarea>
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleNewProject('cancel')">Cancel</div>
+        <div class="add" onclick="handleNewProject('add')">Add Project</div>
+      </div>
+    </form>
+  </div>
+  `;
+}
+
+function handleNewProject(what) {
+  if (what === 'add') {
+    var title = document.getElementById('title').value;
+    var text = document.getElementById('text').value;
+
+    const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
+    const { group } = userSnapshot.val();
+
+    const newProject = {
+      title: title,
+      text: text,
+    };
+
+    database.ref(`/groups/${group}/projects/`).push(newProject).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminProjects();
+        alertMessage(t="success","New project added!");
+        sendBulkEmail(group, 'project', title);
+      })
+    }).catch(error => {
+      console.error("Error updating project in Firebase:", error);
+    });
+  }
+  else {
+    showAdminProjects();
+  }
+}
+
+function showAdminProject() {
+  const projectsElement = document.getElementById('admin-projects');
+  projectsElement.innerHTML = '';
+
+  const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
+  const { group } = userSnapshot.val();
+  const projectsSnapshot = entireDbSnapshot.child('/groups/' + group + '/projects');
+
+  let htmlContent = '';
+  
+  projectsSnapshot.forEach(projectSnapshot => {
+    const { title, text } = projectSnapshot.val();
+
+    htmlContent += `
+      <div class='admin-event flex'>
+        <div>
+          <h3>${title}</h3>
+          <span>${text.substring(0, 150)} ...</span>
+        </div>
+        <div class="admin-icons">
+          <i class="fa-solid fa-trash-can delete" onclick="deleteProject('${group}', '${projectSnapshot.key}')"></i>
+        </div>
+      </div>`;
+  });
+  projectsElement.innerHTML = htmlContent || 'No projects found!';
+}
+
+function deleteProject(group,key) {
+  database.ref('/groups/' + group + '/projects/' + key).remove().then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showAdminProjects();
+      alertMessage(t="success","Project deleted successfully!");
+    })
+  });
+}
+
 
 function showAdminTasks() {
   document.getElementById('admin-contents').innerHTML = `

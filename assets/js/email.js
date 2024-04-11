@@ -27,6 +27,7 @@ function sendBulkEmail(grp, type, title) {
       Institute for Theoretical and Computational Physics Research (ITCPR)
       `;
       sendEmail(email, `New ${type} added!`, body);
+      console.log(`Email sent to ${email}`);
     }
   })
 }

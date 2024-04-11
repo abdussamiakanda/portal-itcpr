@@ -101,12 +101,64 @@ function showAdminProject() {
           <span>${text.substring(0, 150)} ...</span>
         </div>
         <div class="admin-icons">
-          <i class="fa-solid fa-trash-can delete" onclick="deleteProject('${group}', '${projectSnapshot.key}')"></i>
+        <i class="fa-solid fa-edit delete" onclick="editProject('${group}', '${projectSnapshot.key}')"></i>
+        <i class="fa-solid fa-trash-can delete" onclick="deleteProject('${group}', '${projectSnapshot.key}')"></i>
         </div>
       </div>`;
   });
   projectsElement.innerHTML = htmlContent || 'No projects found!';
 }
+
+function editProject(group,key) {
+  const projectSnapshot = entireDbSnapshot.child(`/groups/${group}/projects/${key}`);
+  const { title, text } = projectSnapshot.val();
+
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <input type="text" id="title" value="${title}">
+      <textarea id="text">${text}</textarea>
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleEditProject('cancel','','')">Cancel</div>
+        <div class="add" onclick="handleEditProject('add','${group}','${key}')">Edit Project</div>
+      </div>
+    </form>
+  </div>
+  `;
+  const textarea = document.getElementById('text');
+  textarea.addEventListener('input', autoResize, false);
+}
+
+function autoResize() {
+  this.style.height = 'auto';
+  this.style.height = this.scrollHeight + 'px';
+}
+
+function handleEditProject(what,group,key) {
+  if (what === 'add') {
+    var title = document.getElementById('title').value;
+    var text = document.getElementById('text').value;
+
+    const updateValue = {
+      title: title,
+      text: text,
+    };
+
+    database.ref('/groups/' + group + '/projects/' + key).update(updateValue).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminProjects();
+        alertMessage(t="success","Project updated successfully!");
+      })
+    }).catch(error => {
+      console.error("Error updating project in Firebase:", error);
+    });
+  } else {
+    showAdminProjects();
+  }
+}
+
 
 function deleteProject(group,key) {
   database.ref('/groups/' + group + '/projects/' + key).remove().then(() => {

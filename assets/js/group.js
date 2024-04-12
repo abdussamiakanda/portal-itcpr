@@ -11,17 +11,10 @@ function showGroup() {
         <h2>Ongoing Projects</h2>
         <div id='group-projects' class='events'></div>
       </div>
-      <div class="tab">
-        <h2>Group People</h2>
-        <div id='group-lead' class='group-people'></div>
-        <div id='group-member' class='group-people'></div>
-        <div id='group-intern' class='group-people'></div>
-      </div>
 
     </div>
   </div>`;
   showGroupTasks();
-  showGroupPeople();
   showGroupProjects();
 }
 
@@ -101,56 +94,3 @@ function handleGroupTask(key) {
   }
 }
 
-function showGroupPeople() {
-  const mygroup = entireDbSnapshot.child('/users/' + emailKey + '/group').val();
-
-  let htmlContent1 = '';
-  let htmlContent2 = '';
-  let htmlContent3 = '';
-
-  const usersSnapshot = entireDbSnapshot.child('/users');
-
-  usersSnapshot.forEach(childSnapshot => {
-    const { name, group, position, email, url } = childSnapshot.val();
-
-    if (mygroup === group) {
-      let targetHtmlContent = '';
-      switch (position) {
-        case 'Lead':
-          targetHtmlContent = htmlContent1;
-          break;
-        case 'Member':
-          targetHtmlContent = htmlContent2;
-          break;
-        case 'Intern':
-          targetHtmlContent = htmlContent3;
-          break;
-      }
-
-      targetHtmlContent += `
-      <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="${name}">
-        <div>
-          <b>${name}</b> <br>
-          ${position}, ${capitalizeFirstLetter(group)} Group
-          <div class='event-icons'>
-            <i class="fa-solid fa-envelope" onclick="copyToClipboard('${email}')"></i>
-            ${url ? `<i class="fa-solid fa-link" onclick="goToExternal('${url}')"></i>` : ''}
-          </div>
-        </div>
-      </div>`;
-      
-      if (position === 'Lead') {
-        htmlContent1 = targetHtmlContent;
-      } else if (position === 'Member') {
-        htmlContent2 = targetHtmlContent;
-      } else if (position === 'Intern') {
-        htmlContent3 = targetHtmlContent;
-      }
-    }
-  });
-  
-  document.getElementById('group-lead').innerHTML = htmlContent1;
-  document.getElementById('group-member').innerHTML = htmlContent2;
-  document.getElementById('group-intern').innerHTML = htmlContent3;
-}

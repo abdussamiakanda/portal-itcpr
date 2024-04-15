@@ -217,6 +217,7 @@ function showUsefulLinks() {
       { url: 'https://itcpr.org/post/getting_started_with_spintronics', iconClass: 'fa-solid fa-person-snowboarding', text: 'Kickstart' },
       { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
       { url: 'https://literature.itcpr.org', iconClass: 'fa-solid fa-book-open', text: 'Literature' },
+      { url: 'https://physics.itcpr.org', iconClass: 'fa-regular fa-file-lines', text: 'Physics' },
       { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
     ];
   } else {
@@ -225,6 +226,7 @@ function showUsefulLinks() {
       // { url: 'https://mail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Email' },
       { url: 'https://discord.gg/bfCJQvQybU', iconClass: 'fa-brands fa-discord', text: 'Discord' },
       { url: 'https://literature.itcpr.org', iconClass: 'fa-solid fa-book-open', text: 'Literature' },
+      { url: 'https://physics.itcpr.org', iconClass: 'fa-regular fa-file-lines', text: 'Physics' },
       { url: 'http://server.itcpr.org/status.html', iconClass: 'fa-solid fa-server', text: 'Server' },
     ];
   }

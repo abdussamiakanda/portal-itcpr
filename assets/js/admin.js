@@ -72,7 +72,6 @@ function handleNewProject(what) {
       }).then(() => {
         showAdminProjects();
         alertMessage(t="success","New project added!");
-        sendBulkEmail(group, 'project', title);
       })
     }).catch(error => {
       console.error("Error updating project in Firebase:", error);

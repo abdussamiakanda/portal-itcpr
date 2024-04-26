@@ -319,7 +319,7 @@ function handleNewEvent(what) {
     const timestamp = convertDateTimeToTimestamp(time, userTimeZone);
 
     const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
-    const { group } = userSnapshot.val(); // Destructure for easier access
+    const { group } = userSnapshot.val();
 
     // New notice object
     const newEvent = {
@@ -421,6 +421,7 @@ function showAdminUsers() {
     <div>POSITION</div>
     <div>GROUP</div>
     <div>QUARTILE</div>
+    <div>LAST LOGIN</div>
     <div>EDIT</div>
   </div>
   <div id="admin-users"></div>
@@ -537,7 +538,8 @@ function showAdminUser() {
   let htmlContent = '';
   
   usersSnapshot.forEach(userSnapshot => {
-    const { name, position, group, quartile } = userSnapshot.val();
+    const { name, position, group, quartile, lastlogin, timezone, location } = userSnapshot.val();
+    const loginTime = convertToLocalTime(lastlogin, timezone);
 
     htmlContent += `
       <div class="admin-user">
@@ -545,6 +547,7 @@ function showAdminUser() {
         <div>${position}</div>
         <div>${capitalizeFirstLetter(group)}</div>
         <div>${position === 'Intern' ? `${quartile === '1' ? '1st' : '2nd'} Quartile` : ''}</div>
+        <div>${loginTime} (${location})</div>
         <div>${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}</div>
       </div>`;
   });

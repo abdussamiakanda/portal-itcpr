@@ -359,22 +359,26 @@
     margin-bottom: 5px;
   }
   .admin-contents .users-top div:nth-child(1) {
-    width: 100%;
+    width: 80%;
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(2) {
-    width: 50%;
+    width: 30%;
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(3) {
-    width: 50%;
+    width: 30%;
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(4) {
-    width: 50%;
+    width: 30%;
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(5) {
+    width: 80%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top div:nth-child(6) {
     width: 200px;
   }
 
@@ -389,22 +393,26 @@
     border-radius: 5px;
   }
   .admin-contents .admin-user div:nth-child(1) {
-    width: 100%;
+    width: 80%;
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(2) {
-    width: 50%;
+    width: 30%;
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(3) {
-    width: 50%;
+    width: 30%;
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(4) {
-    width: 50%;
+    width: 30%;
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(5) {
+    width: 80%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user div:nth-child(6) {
     width: 200px;
   }
 

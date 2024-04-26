@@ -71,6 +71,7 @@ function verified(user){
   }).then(() => {
     checkUser(user);
     showTopHeader(user);
+    handleLastLogin(user);
   });
 }
 
@@ -83,6 +84,20 @@ function checkUser(user) {
   } else {
     showDiv('dashboard');
   }
+}
+
+function handleLastLogin(user) {
+  var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const time = moment.tz(userTimeZone).valueOf();
+  const date = new Date(time);
+  const options = { hour: 'numeric', minute: 'numeric', year: 'numeric', month: 'long', day: 'numeric', hour12: true };
+  const formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(date);
+
+  database.ref('/users/' + emailKey).update({
+    lastlogin: formattedDateTime,
+    timezone: userTimeZone,
+    location: "Portal",
+  });
 }
 
 function showDiv(div_id){

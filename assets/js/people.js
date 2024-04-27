@@ -90,6 +90,10 @@ function applyFilters() {
 
 
 function capitalizeFirstLetter(string) {
+  // Check if the input is null or undefined
+  if (string === null || string === undefined) {
+    return string;
+  }
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 

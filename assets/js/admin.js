@@ -482,7 +482,7 @@ Reason for Applying: ${reason}
 Field of Interest: ${field}
 Expectations: ${expectation}`;
 
-    content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    content = content.replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/'/g, '');
     let options = '';
 
     if (approval === 'pending') {

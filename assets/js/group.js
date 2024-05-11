@@ -4,7 +4,7 @@ function showGroup() {
     <div class="tabs">
 
       <div class="tab">
-        <h2>Tasks for the Weeks</h2>
+        <h2>Tasks</h2>
         <div id='group-tasks' class='events'></div>
       </div>
       <div class="tab">

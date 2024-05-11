@@ -9,10 +9,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 a {
   text-decoration: none;
-  color: var(--color2rgba1);
+  color: rgba(0, 0, 255, 1);
 }
 a:hover {
-  color: var(--color2rgba07);
+  color: rgba(0, 0, 255, 0.5);
 }
 a:visited {
   text-decoration: none;

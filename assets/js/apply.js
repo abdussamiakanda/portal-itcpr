@@ -284,7 +284,7 @@ function applicanttoUser(applicantKey) {
     group: field.toLowerCase(),
     id: id,
     position: 'Intern',
-    quartile: quartile,
+    quartile: quartile.toString(),
     start: start,
     end: end,
     attendance: '0/0',

@@ -10,9 +10,9 @@ function sanitizeEmail(email) {
 
 function GoogleLogin() {
   firebase.auth().signInWithPopup(provider).then(res => {
-    verifyUser(res.user); // Corrected to use res.user
+    verifyUser(res.user);
   }).catch((e) => {
-    console.error("Login failed:", e); // Added error logging for better debugging
+    console.error("Login failed:", e);
   });
 }
 
@@ -40,6 +40,8 @@ function verifyUser(user){
     }else {
       showDiv('login');
       deleteEmail();
+      alertMessage(t="success","You don't have access to this website!");
+      GoogleLogout();
     }
   })
 }
@@ -101,7 +103,7 @@ function handleLastLogin(user) {
 }
 
 function showDiv(div_id){
-  const divs = ["login","checklist","dashboard","people","group","admin"];
+  const divs = ["login","checklist","dashboard","people","group","admin","apply"];
   for (let i = 0; i < divs.length; i++) {
     if (divs[i] !== div_id){
       document.getElementById(divs[i]).innerHTML = "";
@@ -117,6 +119,10 @@ function showLogin(){
     <div class="login-form" id="login_form">
       <div class="login-item" id="login_btn">
         <i class="login-i fa fa-google"></i> <b>Log in with Google</b>
+      </div>
+      <br><br><br>
+      <div class="login-item" onclick="showDiv('apply')">
+        <i class="fa-brands fa-wpforms"></i> <b>Apply Now</b>
       </div>
     </div>
   </div>`;
@@ -140,6 +146,8 @@ function show(div){
   } else if (div === 'group'){
     showGroup();
     showHeaderMenu('group');
+  } else if (div === 'apply'){
+    showApplyForm();
   }
 }
 

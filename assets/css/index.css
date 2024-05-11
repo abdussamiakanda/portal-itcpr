@@ -381,7 +381,7 @@
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(6) {
-    width: 200px;
+    width: 300px;
   }
 
   
@@ -415,10 +415,76 @@
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(6) {
-    width: 200px;
+    width: 300px;
   }
 
   
+
+  .admin-contents .users-top2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+  }
+  .admin-contents .users-top2 div:nth-child(1) {
+    width: 80%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top2 div:nth-child(2) {
+    width: 80%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top2 div:nth-child(3) {
+    width: 40%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top2 div:nth-child(4) {
+    width: 80%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top2 div:nth-child(5) {
+    width: 40%;
+    padding: 5px 10px;
+  }
+  .admin-contents .users-top2 div:nth-child(6) {
+    width: 40%;
+  }
+
+  
+  .admin-contents .admin-user2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .admin-contents .admin-user2:hover {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  .admin-contents .admin-user2 div:nth-child(1) {
+    width: 80%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user2 div:nth-child(2) {
+    width: 80%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user2 div:nth-child(3) {
+    width: 40%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user2 div:nth-child(4) {
+    width: 80%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user2 div:nth-child(5) {
+    width: 40%;
+    padding: 10px;
+  }
+  .admin-contents .admin-user2 div:nth-child(6) {
+    width: 40%;
+  }
+
 
   .admin-events {
     display: flex;
@@ -515,6 +581,18 @@
     cursor: pointer;
   }
   .admin-user .usr-btn:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .admin-user2 .usr-btn {
+    padding: 5px;
+    margin-right: 2px;
+    width: 15px;
+    text-align: center;
+    border-radius: 3px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  .admin-user2 .usr-btn:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
 

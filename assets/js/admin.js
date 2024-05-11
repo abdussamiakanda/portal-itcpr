@@ -10,6 +10,7 @@ function showAdmin(div) {
       <div class="${div === 'projects' ? 'selected' : ''}" onclick="showAdmin('projects')">PROJECTS</div>
       <div class="${div === 'notices' ? 'selected' : ''}" onclick="showAdmin('notices')">NOTICES</div>
       ${type === 'admin' ? `<div class="${div === 'users' ? 'selected' : ''}" onclick="showAdmin('users')">USERS</div>` : ''}
+      ${type === 'admin' ? `<div class="${div === 'applicants' ? 'selected' : ''}" onclick="showAdmin('applicants')">APPLICANTS</div>` : ''}
     </div>
     <div class="admin-contents" id="admin-contents"></div>
   </div>
@@ -25,6 +26,8 @@ function showAdmin(div) {
     showAdminTasks();
   } else if (div === 'projects') {
     showAdminProjects();
+  } else if (div === 'applicants') {
+    showApplicants();
   }
 }
 
@@ -429,6 +432,84 @@ function showAdminUsers() {
   showAdminUser();
 }
 
+function showApplicants() {
+  document.getElementById('admin-contents').innerHTML = `
+  <div class="users-top2">
+    <div>NAME</div>
+    <div>EMAIL</div>
+    <div>CONTACTS</div>
+    <div>UNIVERSITY</div>
+    <div>YEAR</div>
+    <div>OPTIONS</div>
+  </div>
+  <div id="admin-users2"></div>
+  `;
+  showApplicant();
+}
+
+function showApplicant() {
+  const userElement = document.getElementById('admin-users2');
+  userElement.innerHTML = '';
+
+  const usersSnapshot = entireDbSnapshot.child(`/applicants`);
+
+  let htmlContent = '';
+  
+  usersSnapshot.forEach(userSnapshot => {
+    const { name, email, contact, university, year, address, education, major, graduationdate, courses, experiences, publications, skills, reason, field, expectation, approval } = userSnapshot.val();
+
+    let content = `Personal Information
+Name: ${name}
+Email: ${email}
+Contact: ${contact}
+Address: ${address}
+
+Educational Background
+Education: ${education}
+University: ${university}
+Major: ${major}
+Year: ${year}
+Graduation Date: ${graduationdate}
+
+Academic and Professional Experience
+Relevant Courses: ${courses}
+Previous Experiences: ${experiences}
+Publications: ${publications}
+Skills: ${skills}
+
+Statement of Interest
+Reason for Applying: ${reason}
+Field of Interest: ${field}
+Expectations: ${expectation}`;
+
+    content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    let options = '';
+
+    if (approval === 'pending') {
+      options = `
+        <i class="fa-solid fa-download usr-btn" onclick="downloadApplication('${userSnapshot.key}.txt','${content}')"></i>
+        <i class="fa-solid fa-circle-check usr-btn" onclick="acceptApplication('${name}','${email}','${field}')"></i>
+        <i class="fa-solid fa-circle-xmark usr-btn" onclick="rejectApplication('${name}','${email}')"></i>`;
+    } else if (approval === 'accepted') {
+      options = `<i class="fa-solid fa-check-circle"></i>`;
+    } else if (approval === 'rejected') {
+      options = `<i class="fa-solid fa-xmark-circle"></i>`;
+    }
+
+    htmlContent += `
+      <div class="admin-user2">
+        <div>${name}</div>
+        <div>${email}</div>
+        <div>${contact}</div>
+        <div>${university}</div>
+        <div>${year}</div>
+        <div>${options}</div>
+      </div>`;
+  });
+  userElement.innerHTML = htmlContent || 'No applications found!';
+}
+
+
 function userDiv() {
   document.getElementById('admin-contents').innerHTML = `
   <div id="admin-event-form">
@@ -540,6 +621,10 @@ function showAdminUser() {
   usersSnapshot.forEach(userSnapshot => {
     const { name, position, group, quartile, lastlogin, timezone, location } = userSnapshot.val();
     const loginTime = convertToLocalTime(lastlogin, timezone);
+    const options = `
+    <i class="fa-solid fa-address-card usr-btn" onclick="downloadCSV('${userSnapshot.key}')"></i>
+    ${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}
+    `;
 
     htmlContent += `
       <div class="admin-user">
@@ -548,7 +633,7 @@ function showAdminUser() {
         <div>${capitalizeFirstLetter(group)}</div>
         <div>${position === 'Intern' ? `${quartile === '1' ? '1st' : '2nd'} Quartile` : ''}</div>
         <div>${loginTime} (${location})</div>
-        <div>${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}</div>
+        <div>${options}</div>
       </div>`;
   });
   userElement.innerHTML = htmlContent || 'No users found!';

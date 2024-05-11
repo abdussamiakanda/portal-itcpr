@@ -11,7 +11,7 @@ function myHeader() {
 }
 
 function showTopHeader(){
-  document.getElementById('menu-top').innerHTML = `<div>`+ userdata.displayName +`</div>
+  document.getElementById('menu-top').innerHTML = `<div onclick="showDiv('profile')">`+ userdata.displayName +`</div>
     <div class="bar"></div>
     <div onclick="GoogleLogout()">LOGOUT</div>`;
 }

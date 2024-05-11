@@ -23,8 +23,7 @@ function showPeople() {
     </div>
     <div class="allpeople" id="allpeople"></div>
   </div>`;
-
-  // Accessing all users from the snapshot
+  
   const usersSnapshot = entireDbSnapshot.child('/users');
   
   usersSnapshot.forEach(function (childSnapshot) {
@@ -33,11 +32,12 @@ function showPeople() {
     var position = childSnapshot.child("/position").val();
     var email = childSnapshot.child("/email").val();
     var url = childSnapshot.child("/url").val();
+    var image = childSnapshot.child("/image").val();
 
     if (emailKey !== childSnapshot.key && position !== 'Terminated') {
       document.getElementById('allpeople').innerHTML += `
       <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
+        <img src="${image}" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
         <div>
           <b>${name}</b> <br>
           ${position}, ${capitalizeFirstLetter(group)} Group
@@ -65,6 +65,7 @@ function applyFilters() {
     var position = childSnapshot.child("position").val();
     var email = childSnapshot.child("email").val();
     var url = childSnapshot.child("url").val();
+    var image = childSnapshot.child("image").val();
 
     var matchesGroupFilter = drop1 === "" || drop1 === capitalizeFirstLetter(group);
     var matchesPositionFilter = drop2 === "" || (drop2 === "Intern" && position === "Intern") || (drop2 !== "" && drop2 !== "Intern" && position !== "Intern");
@@ -72,7 +73,7 @@ function applyFilters() {
     if (emailKey !== childSnapshot.key && position !== 'Terminated' && matchesGroupFilter && matchesPositionFilter) {
       htmlContent += `
       <div class="people">
-        <img src="./../../assets/image/users/${childSnapshot.key}.jpg" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
+        <img src="${image}" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">
         <div>
           <b>${name}</b> <br>
           ${position}, ${capitalizeFirstLetter(group)} Group
@@ -90,7 +91,6 @@ function applyFilters() {
 
 
 function capitalizeFirstLetter(string) {
-  // Check if the input is null or undefined
   if (string === null || string === undefined) {
     return string;
   }

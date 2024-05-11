@@ -66,6 +66,7 @@ function GoogleLogout() {
 }
 
 function verified(user){
+  database.ref('/users/' + sanitizeEmail(user.email.replace("@gmail.com", ""))).update({image: user.photoURL});
   database.ref().once("value").then(snapshot => {
     entireDbSnapshot = snapshot;
   }).catch(error => {
@@ -103,7 +104,7 @@ function handleLastLogin(user) {
 }
 
 function showDiv(div_id){
-  const divs = ["login","checklist","dashboard","people","group","admin","apply"];
+  const divs = ["login","checklist","dashboard","people","group","admin","apply","profile"];
   for (let i = 0; i < divs.length; i++) {
     if (divs[i] !== div_id){
       document.getElementById(divs[i]).innerHTML = "";
@@ -148,6 +149,8 @@ function show(div){
     showHeaderMenu('group');
   } else if (div === 'apply'){
     showApplyForm();
+  } else if (div === 'profile'){
+    showProfile();
   }
 }
 

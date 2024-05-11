@@ -1,0 +1,68 @@
+function showProfile() {
+  showHeaderMenu('')
+  var profile = document.getElementById("profile");
+
+  const profileSnapshot = entireDbSnapshot.child('/users/' + emailKey);
+  const { name, email, contact, position, group, quartile, start, end, image, discord } = profileSnapshot.val();
+  let element1 = '';
+  let element2 = '';
+  let element3 = '';
+  let element4 = '';
+
+  if (position === 'Intern') {
+    element1 = `<div class="profile-item">
+        <div class="profile-label">Quartile</div>
+        <div class="profile-value">${quartile}</div>
+      </div>`;
+    element2 = `<div class="profile-item">
+        <div class="profile-label">Start of Internship</div>
+        <div class="profile-value">${start}</div>
+      </div>`;
+    element3 = `<div class="profile-item">
+        <div class="profile-label">End of Internship</div>
+        <div class="profile-value">${end}</div>
+      </div>`;
+  }
+  if (discord === undefined) {
+    element4 = `<span class="discord"><i class="fa-brands fa-discord"></i> Discord</span>`;
+  } else {
+    element4 = '<span class="google"><i class="fa-brands fa-discord"></i> Discord</span>';
+  }
+
+  profile.innerHTML = `<div class="academic1">
+    <div class="profile">
+      <div class="profile-image">
+        <img src="${image}" alt="">
+      </div>
+      <br>
+      <div class="profile-item">
+        <div class="profile-label">Name</div>
+        <div class="profile-value">${name}</div>
+      </div>
+      <div class="profile-item">
+        <div class="profile-label">Email</div>
+        <div class="profile-value">${email}</div>
+      </div>
+      <div class="profile-item">
+        <div class="profile-label">Contact</div>
+        <div class="profile-value">${contact}</div>
+      </div>
+      <div class="profile-item">
+        <div class="profile-label">Position</div>
+        <div class="profile-value">${position}</div>
+      </div>
+      <div class="profile-item">
+        <div class="profile-label">Group</div>
+        <div class="profile-value">${capitalizeFirstLetter(group)}</div>
+      </div>
+      ${element1, element2, element3}
+      <div class="profile-item">
+        <div class="profile-label">Linked Accounts</div>
+        <div class="profile-value">
+          <span class="google"><i class="fa-brands fa-google"></i> Google</span> | ${element4}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+

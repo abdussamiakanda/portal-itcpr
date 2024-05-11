@@ -546,7 +546,7 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 5px;
   }
   .admin-events .admin-event .admin-icons .delete {
     font-size: 18px;

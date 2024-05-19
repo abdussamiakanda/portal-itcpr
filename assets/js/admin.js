@@ -537,9 +537,13 @@ Expectations: ${expectation}`;
         <i class="fa-solid fa-circle-check usr-btn" onclick="acceptApplication('${name}','${email}','${field}')"></i>
         <i class="fa-solid fa-circle-xmark usr-btn" onclick="rejectApplication('${name}','${email}')"></i>`;
     } else if (approval === 'accepted') {
-      options = `<i class="fa-solid fa-check-circle"></i>`;
+      options = `
+        <i class="fa-solid fa-download usr-btn" onclick="downloadApplication('${userSnapshot.key}.txt','${content}')"></i>
+        <i class="fa-solid fa-check-circle"></i>`;
     } else if (approval === 'rejected') {
-      options = `<i class="fa-solid fa-xmark-circle"></i>`;
+      options = `
+        <i class="fa-solid fa-download usr-btn" onclick="downloadApplication('${userSnapshot.key}.txt','${content}')"></i>
+        <i class="fa-solid fa-xmark-circle"></i>`;
     }
 
     htmlContent += `

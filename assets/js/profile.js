@@ -22,6 +22,11 @@ function showProfile() {
         <div class="profile-label">End of Internship</div>
         <div class="profile-value">${end}</div>
       </div>`;
+    Ggroup1 = 'Intern';
+    url1 = 'interns';
+  } else {
+    Ggroup1 = 'Members';
+    url1 = 'members';
   }
   if (discord === undefined) {
     element4 = `<span class="discord"><i class="fa-brands fa-discord"></i> Discord</span>`;
@@ -57,9 +62,15 @@ function showProfile() {
       </div>
       ${element1, element2, element3}
       <div class="profile-item">
-        <div class="profile-label">Linked Accounts</div>
+        <div class="profile-label">Link Accounts</div>
         <div class="profile-value">
           <span class="google"><i class="fa-brands fa-google"></i> Google</span> | ${element4}
+        </div>
+      </div>
+      <div class="profile-item">
+        <div class="profile-label">Join Google Groups</div>
+        <div class="profile-value">
+          <span class="discord" onclick="goToExternal('https://groups.google.com/a/itcpr.org/g/${url1}')">${Ggroup1}</span> | <span class="discord" onclick="goToExternal('https://groups.google.com/a/itcpr.org/g/${group}')">${capitalizeFirstLetter(group)}</span>
         </div>
       </div>
     </div>

@@ -14,8 +14,9 @@ function showChecklist() {
         <div>
           <h3>Setup Email Box</h3>
           <ul>
-            <li>Check your email and make sure you're added to two google groups.</li>
+            <li>Make sure you joined to two google groups.</li>
             <li>One for your position at ITCPR and another for your research group.</li>
+            <li>Go to your profile (click your name on the top) to find the join links.</li>
           </ul>
         </div>
       </div>
@@ -28,7 +29,7 @@ function showChecklist() {
             <li>Install Discord on your devices, e.g., laptop, or smartphone.</li>
             <li>Be sure to have your nickname as the username on the server.</li>
             <li>Check frequently and daily for updates.</li>
-            <li>Join our discord server: <a href="https://discord.gg/bfCJQvQybU" target="_blank">https://discord.gg/bfCJQvQybU</a></li>
+            <li>Discord server join link can be found in the "Useful Links" section.</li>
           </ul>
         </div>
       </div>

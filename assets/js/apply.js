@@ -68,7 +68,7 @@ function showApplyForm() {
 }
 
 function handleNewApplicant() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trimEnd();
   const email = document.getElementById('email').value;
   const contact = document.getElementById('contact').value;
   const address = document.getElementById('address').value;

@@ -623,7 +623,7 @@ function showAdminUser() {
     const loginTime = convertToLocalTime(lastlogin, timezone);
     const options = `
     <i class="fa-solid fa-address-card usr-btn" onclick="downloadCSV('${userSnapshot.key}')"></i>
-    ${emailKey !== userSnapshot.key ? `<i class="fa-solid fa-pen-to-square usr-btn"></i> <i class="fa-solid fa-trash-can usr-btn"></i>` : ''}
+    <i class="fa-solid fa-pen-to-square usr-btn" onclick="editUser('${userSnapshot.key}')"></i>
     `;
 
     htmlContent += `
@@ -638,6 +638,85 @@ function showAdminUser() {
   });
   userElement.innerHTML = htmlContent || 'No users found!';
 }
+
+function editUser(key) {
+  const userSnapshot = entireDbSnapshot.child(`/users/${key}`);
+  const { name, id, email, group, position, quartile, start, end, url } = userSnapshot.val();
+
+  const sanitizedStart = start ?? '';
+  const sanitizedEnd = end ?? '';
+  const sanitizedUrl = url ?? '';
+
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <div class="input-similar">${name}</div>
+      <div class="input-similar">${id}</div>
+      <div class="input-similar">${email}</div>
+      <select id="position" class="dropdown">
+        <option value="">Select User Type</option>
+        <option value="Intern" ${position === 'Intern' ? 'selected' : ''}>Intern</option>
+        <option value="Member" ${position === 'Member' ? 'selected' : ''}>Member</option>
+        <option value="Terminated" ${position === 'Terminated' ? 'selected' : ''}>Terminated</option>
+        <option value="Lead" ${position === 'Lead' ? 'selected' : ''}>Lead</option>
+      </select>
+      <select id="usrgroup" class="dropdown">
+        <option value="">Select Group</option>
+        <option value="spintronics" ${group === 'spintronics' ? 'selected' : ''}>Spintronics</option>
+        <option value="photonics" ${group === 'photonics' ? 'selected' : ''}>Photonics</option>
+      </select>
+      <select id="quartile" class="dropdown">
+        <option value="">Select Quartile</option>
+        <option value=1 ${quartile === '1' ? 'selected' : ''}>1st Quartile</option>
+        <option value=2 ${quartile === '2' ? 'selected' : ''}>2nd Quartile</option>
+      </select>
+      <input type="text" id="start" value="${sanitizedStart}" placeholder="Enter Start Date..">
+      <input type="text" id="end" value="${sanitizedEnd}" placeholder="Enter End Date..">
+      <input type="text" id="url" value="${sanitizedUrl}" placeholder="Enter User URL..">
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleEditUser('cancel','')">Cancel</div>
+        <div class="add" onclick="handleEditUser('add','${key}')">Edit User</div>
+      </div>
+    </form>
+  </div>
+  `;
+}
+
+
+function handleEditUser(what,key) {
+  if (what === 'add') {
+    var position = document.getElementById('position').value;
+    var group = document.getElementById('usrgroup').value;
+    var quartile = document.getElementById('quartile').value;
+    var start = document.getElementById('start').value;
+    var end = document.getElementById('end').value;
+    var url = document.getElementById('url').value;
+
+    const updateValue = {
+      position: position,
+      group: group,
+      quartile: quartile,
+      start: start,
+      end: end,
+      url: url,
+    };
+
+    database.ref('/users/' + key).update(updateValue).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminUsers();
+        alertMessage(t="success","User updated successfully!");
+      })
+    }).catch(error => {
+      console.error("Error updating user in Firebase:", error);
+    });
+  } else {
+    showAdminUsers();
+  }
+}
+
+
 
 function showAdminEvent() {
   const noticesElement = document.getElementById('admin-events');

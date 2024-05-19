@@ -259,15 +259,61 @@ function showAdminTask() {
       <div class='admin-event flex'>
         <div>
           <h3>${title}</h3>
-          <span>${text.substring(0, 150).replace(/<[^>]*>/g, '')} ...</span>
+          <span>${text.replace(/<[^>]*>/g, '').substring(0, 150)} ...</span>
         </div>
         <div class="admin-icons">
           <i class="fa-solid fa-eye delete" onclick="showDetail('task', '${taskSnapshot.key}')"></i>
+          <i class="fa-solid fa-pen-to-square delete" onclick="editTask('${group}', '${taskSnapshot.key}')"></i>
           <i class="fa-solid fa-trash-can delete" onclick="deleteTask('${group}', '${taskSnapshot.key}')"></i>
         </div>
       </div>`;
   });
   tasksElement.innerHTML = htmlContent || 'No events found!';
+}
+
+function editTask(group,key) {
+  const taskSnapshot = entireDbSnapshot.child(`/groups/${group}/tasks/${key}`);
+  const { title, text } = taskSnapshot.val();
+
+  document.getElementById('admin-contents').innerHTML = `
+  <div id="admin-event-form">
+    <form>
+      <input type="text" id="title" value="${title}">
+      <textarea id="text">${text}</textarea>
+      <div class="form-bottom">
+        <div class="cancel" onclick="handleEditTask('cancel','')">Cancel</div>
+        <div class="add" onclick="handleEditTask('add','${group}','${key}')">Edit Task</div>
+      </div>
+    </form>
+  </div>
+  `;
+  const textarea = document.getElementById('text');
+  textarea.addEventListener('input', autoResize, false);
+}
+
+function handleEditTask(what,group,key) {
+  if (what === 'add') {
+    var title = document.getElementById('title').value;
+    var text = document.getElementById('text').value;
+
+    const updateValue = {
+      title: title,
+      text: text,
+    };
+
+    database.ref('/groups/' + group + '/tasks/' + key).update(updateValue).then(() => {
+      database.ref().once("value").then(snapshot => {
+        entireDbSnapshot = snapshot;
+      }).then(() => {
+        showAdminTasks();
+        alertMessage(t="success","Task updated successfully!");
+      })
+    }).catch(error => {
+      console.error("Error updating task in Firebase:", error);
+    });
+  } else {
+    showAdminTasks();
+  }
 }
 
 
@@ -985,7 +1031,7 @@ function showDetail(type, key) {
           <div class="detail-content">
             <span class="type">Task</span>
             <h3>${title}</h3> <br>
-            <span>${text}</span>
+            <span><md-block>${text}</md-block></span>
           </div>
         </div>
       </div>`;

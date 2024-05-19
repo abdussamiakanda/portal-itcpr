@@ -77,13 +77,13 @@ function showGroupTasks() {
       htmlContent += `
       <div class="tab">
         <h3 onclick="handleGroupTask('${childSnapshot.key}')">${title}</h3>
-        <div>${text}</div>
+        <div><md-block>${text}</md-block></div>
       </div>`;
     } else if (position !== 'Intern') {
       htmlContent += `
       <div class="tab">
         <h3 onclick="handleGroupTask('${childSnapshot.key}')">${title}</h3>
-        <div>${text}</div>
+        <div><md-block>${text}</md-block></div>
       </div>`;
     }
   });

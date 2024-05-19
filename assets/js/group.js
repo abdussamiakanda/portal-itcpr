@@ -1,7 +1,19 @@
-function showGroup() {
+function showGroup(div) {
   document.getElementById('group').innerHTML = `
   <div class="academic1">
-    <div class="tabs">
+    <div class="admin-top">
+      <div class="${div === 'tasks' ? 'selected' : ''}" onclick="showGroup('tasks')">TASKS</div>
+      <div class="${div === 'projects' ? 'selected' : ''}" onclick="showGroup('projects')">PROJECTS</div>
+    </div>
+
+    <br>
+
+    <div class="tabs" id="group-items">
+
+      <div class="tab">
+        <h2>Tasks</h2>
+        <div id='group-tasks' class='events'></div>
+      </div>
 
       <div class="tab">
         <h2>Tasks</h2>
@@ -14,12 +26,15 @@ function showGroup() {
 
     </div>
   </div>`;
-  showGroupTasks();
-  showGroupProjects();
+  if (div === 'tasks') {
+    showGroupTasks();
+  } else if (div === 'projects') {
+    showGroupProjects();
+  }
 }
 
 function showGroupProjects() {
-  const eventsElement = document.getElementById('group-projects');
+  const eventsElement = document.getElementById('group-items');
   
   eventsElement.innerHTML = '';
   
@@ -33,9 +48,9 @@ function showGroupProjects() {
     const { title, text } = childSnapshot.val();
 
     htmlContent += `
-      <div class="">
-        <h3 onclick="handleGroupTask('${childSnapshot.key}')">Project: ${title}</h3>
-        <div id="task-${childSnapshot.key}"><md-block>${text}</md-block></div>
+      <div class="tab">
+        <h3>Project Title: ${title}</h3>
+        <div><md-block>${text}</md-block></div>
       </div>`;
   });
   
@@ -43,7 +58,7 @@ function showGroupProjects() {
 }
 
 function showGroupTasks() {
-  const eventsElement = document.getElementById('group-tasks');
+  const eventsElement = document.getElementById('group-items');
   
   eventsElement.innerHTML = '';
   
@@ -60,15 +75,15 @@ function showGroupTasks() {
 
     if (quart === quartile && position === 'Intern') {
       htmlContent += `
-      <div class="group-task">
-        <b onclick="handleGroupTask('${childSnapshot.key}')">${title}  <i class="fa-solid fa-chevron-right" id="arrow-${childSnapshot.key}"></i></b>
-        <div id="task-${childSnapshot.key}">${text}</div>
+      <div class="tab">
+        <h3 onclick="handleGroupTask('${childSnapshot.key}')">${title}</h3>
+        <div>${text}</div>
       </div>`;
     } else if (position !== 'Intern') {
       htmlContent += `
-      <div class="group-task">
-        <b onclick="handleGroupTask('${childSnapshot.key}')">${title}  <i class="fa-solid fa-chevron-right" id="arrow-${childSnapshot.key}"></i></b>
-        <div id="task-${childSnapshot.key}">${text}</div>
+      <div class="tab">
+        <h3 onclick="handleGroupTask('${childSnapshot.key}')">${title}</h3>
+        <div>${text}</div>
       </div>`;
     }
   });
@@ -76,21 +91,4 @@ function showGroupTasks() {
   eventsElement.innerHTML = htmlContent || 'No tasks yet!!';
 }
 
-function handleGroupTask(key) {
-  const elem = document.getElementById('task-'+key);
-  const arrow = document.getElementById('arrow-'+key);
-  if (elem) {
-    const currentDisplay = window.getComputedStyle(elem).display;
-
-    if (currentDisplay === "none") {
-      elem.style.display = 'block';
-      arrow.classList.replace('fa-chevron-right', 'fa-chevron-down');
-    } else {
-      elem.style.display = 'none';
-      arrow.classList.replace('fa-chevron-down', 'fa-chevron-right');
-    }
-  } else {
-    console.error("Element with id '" + key + "' not found.");
-  }
-}
 

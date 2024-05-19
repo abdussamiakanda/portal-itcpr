@@ -259,7 +259,7 @@ function showAdminTask() {
       <div class='admin-event flex'>
         <div>
           <h3>${title}</h3>
-          <span>${text.substring(0, 150)} ...</span>
+          <span>${text.substring(0, 150).replace(/<[^>]*>/g, '')} ...</span>
         </div>
         <div class="admin-icons">
           <i class="fa-solid fa-eye delete" onclick="showDetail('task', '${taskSnapshot.key}')"></i>

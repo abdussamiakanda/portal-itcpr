@@ -145,7 +145,7 @@ function show(div){
     showAdmin('events');
     showHeaderMenu('admin');
   } else if (div === 'group'){
-    showGroup();
+    showGroup('tasks');
     showHeaderMenu('group');
   } else if (div === 'apply'){
     showApplyForm();

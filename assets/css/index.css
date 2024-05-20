@@ -80,6 +80,13 @@
     flex-wrap: wrap;
     gap: 20px;
   }
+  #group-items {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 20px;
+  }
 
   .tab {
     width: 100%;
@@ -90,7 +97,8 @@
     padding: 15px;
   }
   .tab h2 {
-    padding: 10px 15px 2px 15px;
+    padding: 10px 15px 8px 15px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
   .tab h3 {
     font-size: 22px;

@@ -43,13 +43,15 @@ function showGroupProjects() {
   const projectsSnapshot = entireDbSnapshot.child('/groups/' + group + '/projects');
 
   let htmlContent = '';
+  let num = 0;
 
   projectsSnapshot.forEach(childSnapshot => {
     const { title, text } = childSnapshot.val();
+    num++;
 
     htmlContent += `
       <div class="tab">
-        <h3>Project Title: ${title}</h3>
+        <h3>Project ${num}: ${title}</h3>
         <div><md-block>${text}</md-block></div>
       </div>`;
   });

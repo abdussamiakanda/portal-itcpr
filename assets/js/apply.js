@@ -1,3 +1,5 @@
+let aplicationStatus = false;
+
 function showApplyForm() {
   document.getElementById('apply').innerHTML = `
   <div class="applyform">
@@ -9,21 +11,21 @@ function showApplyForm() {
     <form>
       <h3>Personal Information</h3>
       <p>Ensure that the information you provide in your application accurately matches your official documents, such as your National ID or passport.</p>
-      <input type="text" id="name" placeholder="Enter Full Name..">
-      <input type="text" id="email" placeholder="Enter Email (Use Gmail Address)..">
-      <input type="text" id="contact" placeholder="Enter Contact Number..">
-      <input type="text" id="address" placeholder="Enter Address..">
+      <input type="text" id="name" placeholder="Enter Full Name.." onkeyup="checkApplication()">
+      <input type="text" id="email" placeholder="Enter Email (Use Gmail Address).." onkeyup="checkApplication()">
+      <input type="text" id="contact" placeholder="Enter Contact Number.." onkeyup="checkApplication()">
+      <input type="text" id="address" placeholder="Enter Address.." onkeyup="checkApplication()">
 
       <h3>Educational Background</h3>
       <p>Our internship program primarily targets undergraduate students, offering a platform to engage in meaningful research in theoretical and computational physics. We also extend this opportunity to graduate students who may lack access to quality research in their current programs.</p>
-      <select id="education" class="dropdown">
+      <select id="education" class="dropdown" onkeyup="checkApplication()">
         <option value="">Current Level of Education</option>
         <option value="Undergraduate">Undergraduate</option>
         <option value="Graduate">Graduate</option>
       </select>
-      <input type="text" id="university" placeholder="Current University..">
-      <input type="text" id="major" placeholder="Enter Major..">
-      <select id="year" class="dropdown">
+      <input type="text" id="university" placeholder="Current University.." onkeyup="checkApplication()">
+      <input type="text" id="major" placeholder="Enter Major.." onkeyup="checkApplication()">
+      <select id="year" class="dropdown" onkeyup="checkApplication()">
         <option value="">Current Year</option>
         <option value="1st Year">1st Year</option>
         <option value="2nd Year">2nd Year</option>
@@ -31,27 +33,27 @@ function showApplyForm() {
         <option value="4th Year">4th Year</option>
         <option value="5th Year">5th Year</option>
       </select>
-      <input type="text" id="graduationdate" placeholder="Expected Graduation Date..">
+      <input type="text" id="graduationdate" placeholder="Expected Graduation Date.." onkeyup="checkApplication()">
 
       <h3>Academic and Professional Experience</h3>
       <p>In your application, detail all relevant experiences comprehensively. For any sections that do not apply to you, simply write 'N/A' (not applicable) to indicate this.</p>
-      <textarea id="courses" placeholder="Relevant Courses Taken.."></textarea>
-      <textarea id="experiences" placeholder="Previous Internships or Research Experiences.."></textarea>
-      <textarea id="publications" placeholder="Any Published Work.."></textarea>
-      <textarea id="skills" placeholder="Skills Relevant to the Research Field.."></textarea>
+      <textarea id="courses" placeholder="Relevant Courses Taken (List academic and online courses).." onkeyup="checkApplication()"></textarea>
+      <textarea id="experiences" placeholder="Previous Internships or Research Experiences.." onkeyup="checkApplication()"></textarea>
+      <textarea id="publications" placeholder="Any Published Work.." onkeyup="checkApplication()"></textarea>
+      <textarea id="skills" placeholder="Skills Relevant to the Research Field.." onkeyup="checkApplication()"></textarea>
 
       <h3>Statement of Interest</h3>
       <p>In your application, provide succinct and focused descriptions of your interests. This clarity will help us better understand your passion and how it aligns with our research goals.</p>
-      <textarea id="reason" placeholder="Reasons for Applying to the Internship.."></textarea>
-      <select id="field" class="dropdown">
+      <textarea id="reason" placeholder="Reasons for Applying to the Internship (100 words minimum).." onkeyup="checkApplication()"></textarea>
+      <select id="field" class="dropdown" onkeyup="checkApplication()">
         <option value="">Specific Areas of Interest</option>
         <option value="Spintronics">Spintronics</option>
         <option value="Photonics">Photonics</option>
       </select>
-      <textarea id="expectation" placeholder="Expectations and Goals for the Internship.."></textarea>
+      <textarea id="expectation" placeholder="Expectations and Goals for the Internship (100 words minimum).." onkeyup="checkApplication()"></textarea>
 
       <h3>Supporting Documents</h3>
-      <p>Please email us the listed documents below in PDF format, to info@itcpr.org. If you are providing additional documents like certificates, kindly merge them into a single PDF file.</p>
+      <p>Please email us the listed documents below in PDF format, to info@itcpr.org. If you are providing additional documents like certificates, kindly merge them into a single PDF file. We'll review your application once you submit the documents.</p>
       <ul>
         <li>Curriculum Vitae (CV)</li>
         <li>Academic Transcript</li>
@@ -66,6 +68,130 @@ function showApplyForm() {
     </form>
   </div>`;
 }
+
+function checkApplication() {
+  const name = document.getElementById('name').value.trimEnd();
+  const email = document.getElementById('email').value;
+  const contact = document.getElementById('contact').value;
+  const address = document.getElementById('address').value;
+  const education = document.getElementById('education').value;
+  const university = document.getElementById('university').value;
+  const major = document.getElementById('major').value;
+  const year = document.getElementById('year').value;
+  const graduationdate = document.getElementById('graduationdate').value;
+  const courses = document.getElementById('courses').value;
+  const experiences = document.getElementById('experiences').value;
+  const publications = document.getElementById('publications').value;
+  const skills = document.getElementById('skills').value;
+  const reason = document.getElementById('reason').value;
+  const field = document.getElementById('field').value;
+  const expectation = document.getElementById('expectation').value;
+
+  if (!name) {
+    document.getElementById('name').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('name').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!email.includes('@gmail.com')) {
+    document.getElementById('email').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('email').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (contact.length < 11 || contact.length > 14) {
+    document.getElementById('contact').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('contact').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!address) {
+    document.getElementById('address').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('address').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!education) {
+    document.getElementById('education').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('education').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!university) {
+    document.getElementById('university').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('university').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!major) {
+    document.getElementById('major').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('major').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!year) {
+    document.getElementById('year').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('year').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!graduationdate) {
+    document.getElementById('graduationdate').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('graduationdate').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!courses || courses.trimEnd() == 'N/A' || courses.length < 100) {
+    document.getElementById('courses').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('courses').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!experiences) {
+    document.getElementById('experiences').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('experiences').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!publications) {
+    document.getElementById('publications').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('publications').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!skills) {
+    document.getElementById('skills').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('skills').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (reason.trim().split(/\s+/).length < 100) {
+    document.getElementById('reason').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('reason').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (!field) {
+    document.getElementById('field').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('field').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+
+  if (expectation.trim().split(/\s+/).length < 100) {
+    document.getElementById('expectation').style.boxShadow = '0px 0px 5px red';
+  } else {
+    document.getElementById('expectation').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
+  }
+  
+  if (name && email && email.includes('@gmail.com') && contact 
+      && contact.length >= 11 && contact.length <= 14 && address && education 
+      && university && major && year && graduationdate && courses && courses.trimEnd() != 'N/A' && courses.length >= 100 
+      && experiences && publications && skills && reason && reason.trim().split(/\s+/).length >= 100 
+      && field && expectation && expectation.trim().split(/\s+/).length >= 100) {
+    aplicationStatus = true;
+  }
+}
+
 
 function handleNewApplicant() {
   const name = document.getElementById('name').value.trimEnd();
@@ -85,7 +211,7 @@ function handleNewApplicant() {
   const field = document.getElementById('field').value;
   const expectation = document.getElementById('expectation').value;
 
-  if (name && email && contact && address && education && university && major && year && graduationdate && courses && experiences && publications && skills && reason && field && expectation) {
+  if (aplicationStatus) {
     emailKey = sanitizeEmail(email.replace("@gmail.com", ""));
 
     const applicantsRef = database.ref('/applicants');
@@ -170,6 +296,7 @@ function handleNewApplicant() {
     });
   
   } else {
+    checkApplication();
     alertMessage(t="fail","Please fill in all required fields.");
   } 
 }

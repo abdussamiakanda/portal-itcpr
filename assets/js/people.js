@@ -34,7 +34,7 @@ function showPeople() {
     var url = childSnapshot.child("/url").val();
     var image = childSnapshot.child("/image").val();
 
-    if (emailKey !== childSnapshot.key && position !== 'Terminated') {
+    if (position !== 'Terminated') {
       document.getElementById('allpeople').innerHTML += `
       <div class="people">
         <img src="${image}" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">

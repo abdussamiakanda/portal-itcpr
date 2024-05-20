@@ -70,7 +70,7 @@ function applyFilters() {
     var matchesGroupFilter = drop1 === "" || drop1 === capitalizeFirstLetter(group);
     var matchesPositionFilter = drop2 === "" || (drop2 === "Intern" && position === "Intern") || (drop2 !== "" && drop2 !== "Intern" && position !== "Intern");
 
-    if (emailKey !== childSnapshot.key && position !== 'Terminated' && matchesGroupFilter && matchesPositionFilter) {
+    if (position !== 'Terminated' && matchesGroupFilter && matchesPositionFilter) {
       htmlContent += `
       <div class="people">
         <img src="${image}" onerror="this.onerror=null;this.src='./../../assets/image/users/default.jpg';" alt="">

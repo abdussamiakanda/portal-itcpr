@@ -549,7 +549,7 @@ Expectations: ${expectation}`;
     htmlContent += `
       <div class="admin-user2">
         <div>${name}</div>
-        <div>${email}</div>
+        <div>${email.length > 20 ? email.substring(0, 20)+'...' : email}</div>
         <div>${contact}</div>
         <div>${university}</div>
         <div>${year}</div>

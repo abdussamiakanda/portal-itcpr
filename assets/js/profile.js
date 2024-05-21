@@ -61,9 +61,9 @@ function showProfile() {
         <div class="profile-value">${capitalizeFirstLetter(group)}</div>
       </div>
       ${element1, element2, element3}
-      <div class="profile-item">Timezone</div>
-        <div class="profile-value">${timezone}
-        </div>
+      <div class="profile-item">
+        <div class="profile-label">Timezone</div>
+        <div class="profile-value">${timezone}</div>
       </div>
       <div class="profile-item">
         <div class="profile-label">Link Accounts</div>

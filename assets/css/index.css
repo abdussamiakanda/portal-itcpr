@@ -429,7 +429,7 @@
     padding: 5px 10px;
   }
   .admin-contents .users-top div:nth-child(6) {
-    width: 300px;
+    width: 200px;
   }
 
   
@@ -463,7 +463,7 @@
     padding: 10px;
   }
   .admin-contents .admin-user div:nth-child(6) {
-    width: 300px;
+    width: 200px;
   }
 
   
@@ -496,7 +496,7 @@
     padding: 5px 10px;
   }
   .admin-contents .users-top2 div:nth-child(6) {
-    width: 40%;
+    width: 350px;
   }
 
   
@@ -530,7 +530,7 @@
     padding: 10px;
   }
   .admin-contents .admin-user2 div:nth-child(6) {
-    width: 40%;
+    width: 350px;
   }
 
 

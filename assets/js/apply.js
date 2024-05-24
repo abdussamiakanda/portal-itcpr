@@ -39,7 +39,7 @@ function editApplication() {
         <h3>Personal Information</h3>
         <p>Ensure that the information you provide in your application accurately matches your official documents, such as your National ID or passport.</p>
         <input type="text" id="name" placeholder="Enter Full Name.." value="${name}" onkeyup="checkApplication()">
-        <input type="text" id="email" placeholder="Enter Email (Use Gmail Address).." value="${email}" onkeyup="checkApplication()">
+        <input type="text" id="email" placeholder="Enter Email Address (Use gmail).." value="${email}" onkeyup="checkApplication()">
         <input type="text" id="contact" placeholder="Enter Contact Number.." value="${contact}" onkeyup="checkApplication()">
         <input type="text" id="address" placeholder="Enter Address.." value="${address}" onkeyup="checkApplication()">
 
@@ -67,7 +67,7 @@ function editApplication() {
         <textarea id="courses" placeholder="Relevant Courses Taken (List academic and online courses).." onkeyup="checkApplication()">${courses}</textarea>
         <textarea id="experiences" placeholder="Previous Internships or Research Experiences.." onkeyup="checkApplication()">${experiences}</textarea>
         <textarea id="publications" placeholder="Any Published Work.." onkeyup="checkApplication()">${publications}</textarea>
-        <textarea id="skills" placeholder="Skills Relevant to the Research Field.." onkeyup="checkApplication()">${skills}</textarea>
+        <textarea id="skills" placeholder="Skills Relevant to the Research Field (List programming and graphic skills).." onkeyup="checkApplication()">${skills}</textarea>
 
         <h3>Statement of Interest</h3>
         <p>In your application, provide succinct and focused descriptions of your interests. This clarity will help us better understand your passion and how it aligns with our research goals.</p>
@@ -208,7 +208,7 @@ function showApplyForm() {
       <h3>Personal Information</h3>
       <p>Ensure that the information you provide in your application accurately matches your official documents, such as your National ID or passport.</p>
       <input type="text" id="name" placeholder="Enter Full Name.." onkeyup="checkApplication()">
-      <input type="text" id="email" placeholder="Enter Email (Use Gmail Address).." onkeyup="checkApplication()">
+      <input type="text" id="email" placeholder="Enter Email Address (Use gmail).." onkeyup="checkApplication()">
       <input type="text" id="contact" placeholder="Enter Contact Number.." onkeyup="checkApplication()">
       <input type="text" id="address" placeholder="Enter Address.." onkeyup="checkApplication()">
 

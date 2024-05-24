@@ -22,6 +22,8 @@ function checkAuthState(){
       userdata = user;
       emailKey = sanitizeEmail(userdata.email.replace("@gmail.com", ""));
       verifyUser(user);
+    } else if (!user && getId()) {
+      editApply();
     } else {
       showDiv('login');
     }

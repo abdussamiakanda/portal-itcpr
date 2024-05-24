@@ -3,7 +3,7 @@ function showProfile() {
   var profile = document.getElementById("profile");
 
   const profileSnapshot = entireDbSnapshot.child('/users/' + emailKey);
-  const { name, email, contact, position, group, quartile, start, end, image, discord } = profileSnapshot.val();
+  const { name, email, contact, position, group, quartile, start, end, timezone, image, discord } = profileSnapshot.val();
   let element1 = '';
   let element2 = '';
   let element3 = '';
@@ -61,6 +61,10 @@ function showProfile() {
         <div class="profile-value">${capitalizeFirstLetter(group)}</div>
       </div>
       ${element1, element2, element3}
+      <div class="profile-item">
+        <div class="profile-label">Timezone</div>
+        <div class="profile-value">${timezone}</div>
+      </div>
       <div class="profile-item">
         <div class="profile-label">Link Accounts</div>
         <div class="profile-value">

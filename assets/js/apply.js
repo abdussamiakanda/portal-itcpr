@@ -236,7 +236,7 @@ function showApplyForm() {
       <textarea id="courses" placeholder="Relevant Courses Taken (List academic and online courses).." onkeyup="checkApplication()"></textarea>
       <textarea id="experiences" placeholder="Previous Internships or Research Experiences.." onkeyup="checkApplication()"></textarea>
       <textarea id="publications" placeholder="Any Published Work.." onkeyup="checkApplication()"></textarea>
-      <textarea id="skills" placeholder="Skills Relevant to the Research Field.." onkeyup="checkApplication()"></textarea>
+      <textarea id="skills" placeholder="Skills Relevant to the Research Field (List programming and graphic skills).." onkeyup="checkApplication()"></textarea>
 
       <h3>Statement of Interest</h3>
       <p>In your application, provide succinct and focused descriptions of your interests. This clarity will help us better understand your passion and how it aligns with our research goals.</p>

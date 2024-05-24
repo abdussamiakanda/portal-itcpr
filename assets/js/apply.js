@@ -355,7 +355,7 @@ function checkApplication() {
     document.getElementById('publications').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';
   }
 
-  if (skills.trim().split(/\s+/).length < 100) {
+  if (skills.trim().split(/\s+/).length < 40) {
     document.getElementById('skills').style.boxShadow = '0px 0px 5px red';
   } else {
     document.getElementById('skills').style.boxShadow = '0px 0px 5px rgba(0, 0, 0, 0.5)';

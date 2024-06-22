@@ -1,5 +1,5 @@
 function sendEmail(to, subject, body) {
-  const url = 'http://itcpremail.pythonanywhere.com/send-email';
+  const url = 'https://itcpremail.pythonanywhere.com/send-email';
   const data = {
     to: to,
     subject: subject,

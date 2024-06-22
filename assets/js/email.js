@@ -1,10 +1,27 @@
 function sendEmail(to, subject, body) {
-  Email.send({
-    SecureToken : "09ce4617-9d96-4bc7-a654-926ff3ab8f2d",
-    To : to,
-    From : "ITCPR Portal <no-reply@itcpr.org>",
-    Subject : subject,
-    Body : body
+  const url = 'http://itcpremail.pythonanywhere.com/send-email';
+  const data = {
+    to: to,
+    subject: subject,
+    body: body
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    console.log('Status code:', response.status);
+    return response.json();
+  })
+  .then(responseData => {
+    console.log('Response:', responseData);
+  })
+  .catch(error => {
+    console.error('Error:', error);
   });
 }
 

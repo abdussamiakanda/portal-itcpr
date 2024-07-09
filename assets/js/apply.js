@@ -543,7 +543,7 @@ function acceptApplication(user,email,field) {
   <br><br>
   <b>Terms of Internship:</b>
   <ul>
-    <li>The internship concludes in December, with the option for interns to reapply for continuation into the next year.</li>
+    <li>The internship concludes in 1 year, with the option for interns to reapply for continuation into the next year.</li>
     <li>Interns are expected to maintain a regular engagement schedule as agreed with their research group lead.</li>
     <li>This is a self-funded institution; therefore, the internship position is unpaid.</li>
     <li>Interns will receive comprehensive training in various software and research methodologies crucial for their role.</li>

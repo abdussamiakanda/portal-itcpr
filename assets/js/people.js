@@ -33,6 +33,7 @@ function showPeople() {
     var email = childSnapshot.child("/email").val();
     var url = childSnapshot.child("/url").val();
     var image = childSnapshot.child("/image").val();
+    var score = childSnapshot.child("/score").val() ? childSnapshot.child("/score").val() : 0;
 
     if (position !== 'Terminated') {
       document.getElementById('allpeople').innerHTML += `
@@ -44,6 +45,7 @@ function showPeople() {
           <div class='event-icons'>
             <i class="fa-solid fa-envelope" onclick="copyToClipboard('${email}')"></i>
             ${url ? `<i class="fa-solid fa-link" onclick="goToExternal('`+url+`')"></i>` : ''}
+            ${position === 'Intern' || 'Member' ? `<span class="score">Score: `+score+`</span>` : ''}
           </div>
         </div>
       </div>`;

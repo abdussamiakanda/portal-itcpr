@@ -77,7 +77,37 @@ function showProfile() {
           <span class="discord" onclick="goToExternal('https://groups.google.com/a/itcpr.org/g/${url1}')">${Ggroup1}</span> | <span class="discord" onclick="goToExternal('https://groups.google.com/a/itcpr.org/g/${group}')">${capitalizeFirstLetter(group)}</span>
         </div>
       </div>
+      <div class="profile-item2">
+        <div class="profile-label">Progress</div><br>
+        <div class="profile-progress" id="profile-progress"></div>
+      </div>
     </div>
   </div>`;
+  showProfileProgress();
+}
+
+function showProfileProgress() {
+  document.getElementById('profile-progress').innerHTML = `
+    <div class="prog-head">
+      <div class="title">MEETING TITLE</div>
+      <div class="att">ATTENDANCE</div>
+      <div class="part">PARTICIPATION</div>
+    </div>`;
+
+  const profileSnapshot = entireDbSnapshot.child('/users/' + emailKey);
+  const { group } = profileSnapshot.val();
+  const usersSnapshot = entireDbSnapshot.child('/groups/' + group + '/events');
+  usersSnapshot.forEach(function (childSnapshot) {
+    var title = childSnapshot.child("/title").val();
+    var isAtt = childSnapshot.child("/gigs/"+ emailKey + "/attendance").val();
+    var isPart = childSnapshot.child("/gigs/"+ emailKey + "/participation").val();
+    console.log(title, isAtt, isPart);
+    document.getElementById('profile-progress').innerHTML += `
+      <div class="prog-detail">
+        <div class="title">${title}</div>
+        <div class="att">${isAtt}</div>
+        <div class="part">${isPart}</div>
+      </div>`;
+  });
 }
 

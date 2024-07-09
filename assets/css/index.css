@@ -260,6 +260,44 @@
     margin: 10px 0px;
     border-radius: 5px;
   }
+  .profile .profile-item2 {
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    margin: 10px 0px;
+    border-radius: 5px;
+  }
+  .profile .profile-item2 .profile-label {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .profile .prog-head {
+    display: flex;
+    padding: 5px 10px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+  }
+  .profile .prog-detail {
+    display: flex;
+    padding: 5px 10px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  }
+  .profile .prog-head .title {
+    width: 100%;
+  }
+  .profile .prog-head .att {
+    width: 200px;
+  }
+  .profile .prog-head .part {
+    width: 200px;
+  }
+  .profile .prog-detail .title {
+    width: 100%;
+  }
+  .profile .prog-detail .att {
+    width: 200px;
+  }
+  .profile .prog-detail .part {
+    width: 200px;
+  }
   .profile .profile-image {
     display: flex;
     align-items: center;
@@ -341,6 +379,9 @@
     border-radius: 100%;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
   }
+  .people div {
+    width: 100%;
+  }
   .people .event-icons {
     font-size: 18px;
     padding-top: 5px;
@@ -357,6 +398,10 @@
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     cursor: pointer;
+  }
+  .people .event-icons .score {
+    font-size: 14px;
+    margin:  auto 0px auto auto;
   }
 
   .admin-top {

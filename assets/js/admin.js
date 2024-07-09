@@ -370,7 +370,6 @@ function handleNewEvent(what) {
     const userSnapshot = entireDbSnapshot.child(`users/${emailKey}`);
     const { group } = userSnapshot.val();
 
-    // New notice object
     const newEvent = {
       title: title,
       time: formattedDateTime,
@@ -903,6 +902,7 @@ function handlePerformance(type,group,event,user,value) {
     database.ref('/groups/' + group + '/events/' + event + '/gigs/' + user).update(updateValue).then(() => {
       const userSnapshot = entireDbSnapshot.child(`/users/`+user);
       const attendanceRaw = userSnapshot.child('attendance').val() || '0/0';
+      let scoreRaw = userSnapshot.child('score').val() ? userSnapshot.child('score').val() : 0;
       let [left, right] = attendanceRaw.split('/').map(Number);
 
       if (value === false) {
@@ -910,10 +910,14 @@ function handlePerformance(type,group,event,user,value) {
         right += 1;
       } else if (value === true) {
         right += 1;
+        scoreRaw += 1;
       }
       const updatedAttendance = {
         attendance: left+'/'+right,
       }
+      database.ref(`/users/`+user).update({
+        score : scoreRaw,
+      })
 
       database.ref(`/users/`+user).update(updatedAttendance).then(() => {
         database.ref().once("value").then(snapshot => {
@@ -940,10 +944,14 @@ function handlePerformance(type,group,event,user,value) {
         right += 1;
       } else if (value === true) {
         right += 1;
+        scoreRaw += 1;
       }
       const updatedParticipation = {
         participation: left+'/'+right,
       }
+      database.ref(`/users/`+user).update({
+        score : scoreRaw,
+      })
 
       database.ref(`/users/`+user).update(updatedParticipation).then(() => {
         database.ref().once("value").then(snapshot => {

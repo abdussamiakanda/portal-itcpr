@@ -538,11 +538,13 @@ Expectations: ${expectation}`;
     } else if (approval === 'accepted') {
       options = `
         <i class="fa-solid fa-download usr-btn" onclick="downloadApplication('${userSnapshot.key}.txt','${content}')"></i>
-        <i class="fa-solid fa-check-circle"></i>`;
+        <i class="fa-solid fa-check-circle"></i>
+        <i class="fa-solid fa-trash-can usr-btn" onclick="deleteApplication('${userSnapshot.key}')"></i>`;
     } else if (approval === 'rejected') {
       options = `
         <i class="fa-solid fa-download usr-btn" onclick="downloadApplication('${userSnapshot.key}.txt','${content}')"></i>
-        <i class="fa-solid fa-xmark-circle"></i>`;
+        <i class="fa-solid fa-xmark-circle"></i>
+        <i class="fa-solid fa-trash-can usr-btn" onclick="deleteApplication('${userSnapshot.key}')"></i>`;
     }
 
     htmlContent += `
@@ -558,6 +560,16 @@ Expectations: ${expectation}`;
   userElement.innerHTML = htmlContent || 'No applications found!';
 }
 
+function deleteApplication(key) {
+  database.ref('/applicants/' + key).remove().then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showApplicant();
+      alertMessage(t="success","Application deleted successfully!");
+    })
+  });
+}
 
 function userDiv() {
   document.getElementById('admin-contents').innerHTML = `
@@ -723,6 +735,7 @@ function editUser(key) {
       <input type="text" id="end" value="${sanitizedEnd}" placeholder="Enter End Date..">
       <input type="text" id="url" value="${sanitizedUrl}" placeholder="Enter User URL..">
       <div class="form-bottom">
+        <div class="cancel" onclick="terminateUser('${key}')">Terminate</div>
         <div class="cancel" onclick="handleEditUser('cancel','')">Cancel</div>
         <div class="add" onclick="handleEditUser('add','${key}')">Edit User</div>
       </div>
@@ -731,6 +744,36 @@ function editUser(key) {
   `;
 }
 
+function terminateUser(key) {
+  const userSnapshot = entireDbSnapshot.child(`/users/${key}`);
+  const { name, email } = userSnapshot.val();
+
+  const body = `Dear ${name},<br><br>
+  We regret to inform you that your membership at the Institute for Theoretical and
+  Computational Physics Research (ITCPR) has been terminated. We appreciate your
+  contributions to our community and wish you the best in your future endeavors.
+  <br><br>
+  If you have any questions or concerns, please feel free to reach out to us at
+  <a href="mailto:info@itcpr.org">info@itcpr.org</a>. Thank you.
+  <br><br>
+  Warm regards, <br>
+  Administrative Team <br>
+  Institute for Theoretical and Computational Physics Research (ITCPR)
+  `;
+  const subject = "ITCPR Membership Termination Notification";
+
+  database.ref(`/users/${key}`).update({ position: 'Terminated' }).then(() => {
+    database.ref().once("value").then(snapshot => {
+      entireDbSnapshot = snapshot;
+    }).then(() => {
+      showAdminUsers();
+      alertMessage(t="success","User terminated successfully!");
+      sendEmail(email, subject, body);
+    })
+  }).catch(error => {
+    console.error("Error updating user in Firebase:", error);
+  });
+}
 
 function handleEditUser(what,key) {
   if (what === 'add') {

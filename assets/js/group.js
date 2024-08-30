@@ -2,6 +2,7 @@ function showGroup(div) {
   document.getElementById('group').innerHTML = `
   <div class="academic1">
     <div class="admin-top">
+      <div class="${div === 'slots' ? 'selected' : ''}" onclick="showGroup('slots')">SLOTS</div>
       <div class="${div === 'tasks' ? 'selected' : ''}" onclick="showGroup('tasks')">TASKS</div>
       <div class="${div === 'projects' ? 'selected' : ''}" onclick="showGroup('projects')">PROJECTS</div>
     </div>
@@ -11,10 +12,9 @@ function showGroup(div) {
     <div class="tabs" id="group-items">
 
       <div class="tab">
-        <h2>Tasks</h2>
-        <div id='group-tasks' class='events'></div>
+        <h2>Meeting Slots</h2>
+        <div id='group-slots' class='events'></div>
       </div>
-
       <div class="tab">
         <h2>Tasks</h2>
         <div id='group-tasks' class='events'></div>
@@ -30,7 +30,33 @@ function showGroup(div) {
     showGroupTasks();
   } else if (div === 'projects') {
     showGroupProjects();
+  } else if (div === 'slots') {
+    showGroupSlots();
   }
+}
+
+function showGroupSlots() {
+  const eventsElement = document.getElementById('group-items');
+  
+  eventsElement.innerHTML = '';
+  
+  const groupSnapshot = entireDbSnapshot.child('users/' + emailKey);
+  const group = groupSnapshot.child('group').val();
+  const slotsSnapshot = entireDbSnapshot.child('/groups/' + group + '/slots');
+
+  let htmlContent = '';
+
+  slotsSnapshot.forEach(childSnapshot => {
+    const { date, time, text } = childSnapshot.val();
+
+    htmlContent += `
+      <div class="tab">
+        <h3>${date} - ${time}</h3>
+        <div><md-block>${text}</md-block></div>
+      </div>`;
+  });
+  
+  eventsElement.innerHTML = htmlContent || 'No slots yet!!';
 }
 
 function showGroupProjects() {

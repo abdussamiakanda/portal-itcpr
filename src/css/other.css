@@ -1,0 +1,105 @@
+.jupyter-content p {
+    margin-bottom: 10px;
+}
+
+.jupyter-content ul {
+    margin-left: 20px;
+}
+
+.jupyter-content li {
+    margin-bottom: 5px;
+}
+
+.jupyter-content a {
+    color: #0048ff;
+    text-decoration: none;
+}
+
+.jupyter-content a:hover {
+    text-decoration: underline;
+}
+
+.evaluations-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.evaluation-text-danger {
+    color: var(--error);
+    font-weight: bold;
+    margin-top: 10px;
+    max-width: 250px;
+}
+
+/* Tools Page Styles */
+.tools-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+}
+
+.tools-category {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+}
+
+.tools-category h3 {
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+}
+
+.tool-item:hover {
+    background: var(--primary-lighter);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.tool-item i {
+    font-size: 1.25rem;
+    color: var(--primary);
+    width: 24px;
+    text-align: center;
+}
+
+.tool-item span {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}

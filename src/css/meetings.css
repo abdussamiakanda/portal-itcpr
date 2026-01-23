@@ -1,0 +1,637 @@
+.meetings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.meeting-card {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.meeting-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.meeting-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary);
+}
+
+.meeting-card:hover::before {
+    opacity: 1;
+}
+
+.meeting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.meeting-header .buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meeting-header .buttons .button {
+    text-decoration: none;
+    padding: 2px 8px;
+}
+
+.meeting-header .buttons .button:hover {
+    transform: translateY(-1px);
+}
+
+.meeting-datetime {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-medium);
+    font-weight: 500;
+    font-size: 0.875rem;
+    flex-wrap: wrap;
+}
+
+.meeting-datetime .material-icons {
+    font-size: 20px;
+    color: var(--primary);
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.meeting-date {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9375rem;
+}
+
+.meeting-datetime .meeting-time {
+    color: var(--text-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-light);
+    margin-left: var(--spacing-xs);
+    white-space: nowrap;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.meeting-title {
+    margin: 0 0 var(--spacing-md);
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.meeting-description {
+    color: var(--text-medium);
+    margin: 0;
+    line-height: 1.7;
+    font-size: 0.9375rem;
+}
+
+.meeting-card .btn {
+    flex-shrink: 0;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(157, 157, 189, 0.2);
+    transition: all 0.2s ease;
+}
+
+.meeting-card .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(157, 157, 189, 0.3);
+}
+
+.meeting-card .btn .material-icons {
+    font-size: 18px;
+    margin-right: 4px;
+}
+
+#meetingDescription {
+    resize: vertical;
+}
+
+.meeting-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.meeting-actions .meeting-meta {
+    flex: 1;
+}
+
+.meeting-actions .meeting-meta span {
+    background-color: var(--bg-light);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+    text-transform: capitalize;
+    white-space: nowrap;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.meeting-actions .meeting-meta span.general {
+    background-color: rgba(166, 238, 125, 0.15);
+    color: #4caf50;
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.meeting-actions .meeting-meta span.staff {
+    background-color: rgba(238, 125, 125, 0.15);
+    color: #f44336;
+    border-color: rgba(244, 67, 54, 0.3);
+}
+
+.meeting-actions .meeting-meta span.group {
+    background-color: rgba(125, 127, 238, 0.15);
+    color: #5c6bc0;
+    border-color: rgba(92, 107, 192, 0.3);
+}
+
+.meeting-actions .meeting-meta span.admin {
+    background-color: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.meeting-participants .participant .participant-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.meeting-participants .participant {
+    position: relative;
+}
+.meeting-participants .participant:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+.meeting-participants .participant:hover .participant-img {
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.meeting-participants .participant .participant-name {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    transform: translate(-70%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background: var(--bg-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.meeting-participants .participant:hover .participant-name {
+    opacity: 1;
+}
+
+.meeting-participants {
+    display: flex;
+    gap: var(--spacing-xs);
+    position: relative;
+}
+.more-participants .more {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+}
+
+.more-participants .more:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.more-participants .more-participants-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    padding: 5px 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000000;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.7);
+    text-wrap: nowrap;
+    opacity: 1;
+}
+
+.more-participants .more-participants-list.show {
+    display: flex;
+}
+
+.more-participants .more-participants-list.hide {
+    display: none;
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    color: var(--text-medium);
+}
+
+.empty-state .material-icons {
+    font-size: 48px;
+    margin-bottom: var(--spacing-md);
+}
+
+.meeting-item {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.meeting-card.past {
+    opacity: 0.7;
+    background: var(--bg-light);
+}
+
+.meeting-item.past {
+    opacity: 0.7;
+}
+
+.meeting-item .meeting-time {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-medium);
+    text-wrap: nowrap;
+}
+
+.meeting-item .meeting-time .material-icons {
+    font-size: 18px;
+}
+
+.meeting-item .meeting-time .meeting-date {
+    margin-right: var(--spacing-xs);
+}
+
+.meeting-info h4 {
+    margin: 0 0 var(--spacing-xs);
+    color: var(--text-dark);
+}
+
+.meeting-info p {
+    color: var(--text-medium);
+    margin: 0;
+}
+
+.meeting-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.meeting-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 6px 12px;
+    background: var(--bg-light);
+    border-radius: 6px;
+    color: var(--text-medium);
+    font-size: 0.875rem;
+}
+
+/* Table styling for viewing attendance mode */
+.checkbox-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--bg-main);
+  font-family: sans-serif;
+}
+
+.checkbox-table th,
+.checkbox-table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.checkbox-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.checkbox-table tbody tr:hover {
+  background-color: var(--bg-light);
+  transition: background-color 0.15s ease;
+}
+
+.checkbox-header {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  border-bottom: 2px solid #c7c4c48f;
+}
+
+.checkbox-header th {
+  color: var(--text-dark);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Attendance Container - Responsive Flexbox Layout */
+.attendance-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--bg-main);
+}
+
+.attendance-header {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #c7c4c48f;
+}
+
+.attendance-header-labels {
+  display: grid;
+  grid-template-columns: 50px 50px 80px 300px 1fr;
+  gap: 0;
+  padding: 8px 5px;
+  font-weight: bold;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+}
+
+.attendance-label {
+  padding: 0 5px;
+  text-align: center;
+}
+
+.attendance-label:nth-child(4),
+.attendance-label:nth-child(5) {
+  text-align: left;
+}
+
+.attendance-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.attendance-row {
+  display: grid;
+  grid-template-columns: 50px 50px 80px 300px 1fr;
+  gap: 0;
+  padding: 8px 5px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.15s ease;
+  align-items: center;
+}
+
+.attendance-row:last-child {
+  border-bottom: none;
+}
+
+.attendance-row:hover {
+  background-color: var(--bg-light);
+}
+
+.attendance-cell {
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.checkbox-cell {
+  justify-content: center;
+}
+
+.attendee-cell {
+  font-size: 0.875rem;
+  color: var(--text-dark);
+}
+
+.excuse-cell {
+  font-size: 0.875rem;
+}
+
+.excuse-content {
+  padding: 8px 12px;
+  background: var(--primary-lighter);
+  border-radius: var(--border-radius-sm);
+  border-left: 3px solid var(--primary);
+  width: 100%;
+}
+
+.excuse-reason {
+  color: var(--text-dark);
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.excuse-time {
+  color: var(--text-medium);
+  font-size: 0.75rem;
+}
+
+.excuse-empty {
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.attendance-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  border-radius: 3px;
+  outline: none;
+}
+
+.attendance-row input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+@media (max-width: 768px) {
+    .meeting-header {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .meeting-datetime {
+        text-wrap: nowrap;
+    }
+
+    .meeting-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .meeting-actions .btn {
+        flex: 1;
+        min-width: auto;
+    }
+
+    /* Mobile: Card-based layout for attendance */
+    .attendance-header-labels {
+        display: none; /* Hide header labels on mobile */
+    }
+
+    .attendance-row {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 12px;
+        margin-bottom: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        background: var(--bg-main);
+        gap: 12px;
+        column-gap: 25px;
+        row-gap: 8px;
+    }
+
+    .attendance-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .attendance-cell {
+        padding: 0;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    /* Group checkboxes in a row */
+    .attendance-row .checkbox-cell:nth-child(1),
+    .attendance-row .checkbox-cell:nth-child(2),
+    .attendance-row .checkbox-cell:nth-child(3) {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        width: auto;
+        flex: 0 0 auto;
+        border-bottom: none;
+    }
+
+    .attendance-row .checkbox-cell:nth-child(1)::before {
+        content: "Yes?";
+        font-weight: 600;
+        color: var(--text-medium);
+        font-size: 0.8125rem;
+    }
+
+    .attendance-row .checkbox-cell:nth-child(2)::before {
+        content: "No?";
+        font-weight: 600;
+        color: var(--text-medium);
+        font-size: 0.8125rem;
+    }
+
+    .attendance-row .checkbox-cell:nth-child(3)::before {
+        content: "Excused?";
+        font-weight: 600;
+        color: var(--text-medium);
+        font-size: 0.8125rem;
+    }
+
+    /* Attendee and excuse cells take full width */
+    .attendance-row .attendee-cell,
+    .attendance-row .excuse-cell {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .attendee-cell {
+        font-weight: 600;
+        font-size: 0.9375rem;
+        color: var(--text-dark);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .excuse-cell {
+        padding: 8px 0;
+    }
+
+    /* Hide excuse cell on mobile if it only contains empty span */
+    .excuse-cell:has(> .excuse-empty) {
+        display: none;
+    }
+
+    .excuse-cell:has(> .excuse-content)::before {
+        content: "Excuse Reason: ";
+        font-weight: 600;
+        color: var(--text-medium);
+        font-size: 0.8125rem;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .excuse-content {
+        width: 100%;
+        margin-top: 4px;
+    }
+}

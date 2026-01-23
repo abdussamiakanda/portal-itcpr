@@ -1,0 +1,555 @@
+/* Guides Grid Layout */
+.guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+/* Guide Card Styles */
+.guide-card {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.evaluation-card {
+    padding: 10px 20px !important;
+}
+
+.evaluation-card h3 {
+    margin: 0;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+.guide-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary);
+}
+
+.guide-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.guide-header h3 {
+    margin: var(--spacing-sm) 0 0 0;
+    color: var(--text-dark);
+    font-size: 1.25rem;
+}
+
+/* Guide Category Labels */
+.guide-category {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.guide-category.platform {
+    background: var(--primary-light);
+    color: white;
+}
+
+.guide-category.research {
+    background: var(--success-light);
+    color: var(--success);
+}
+
+.guide-category.tools {
+    background: var(--warning-light);
+    color: var(--warning);
+}
+
+.guide-category.other {
+    background: var(--info-light);
+    color: var(--info);
+}
+
+/* Guide Content */
+.guide-content {
+    color: var(--text-medium);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-md);
+    min-height: 3em;
+}
+
+/* Guide Metadata */
+.guide-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem;
+    color: var(--text-medium);
+}
+
+/* Report Card Styles */
+.report-card:hover {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.report-card .guide-header h3 {
+    font-size: 1rem !important;
+    margin: 0 !important;
+}
+
+.report-card .report-list {
+    padding: 0 !important;
+    gap: 0.5rem !important;
+}
+
+.report-card .report-item {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--bg-main);
+}
+
+.report-card .report-item:hover {
+    transform: translateY(0);
+    box-shadow: none;
+    border-color: var(--primary);
+}
+
+.report-card .report-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.report-card .report-item-header .btn {
+    padding: 5px 10px !important;
+}
+
+.report-card .report-item-title {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-dark);
+}
+
+.guide-author,
+.guide-date,
+.update-date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.guide-meta .material-icons {
+    font-size: 1rem;
+}
+
+/* Guide Actions */
+.guide-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.guide-actions .btn {
+    flex-shrink: 0;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    width: auto;
+    min-width: auto;
+}
+
+.evaluation-card .guide-actions .btn {
+    padding: var(--spacing-xs);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+}
+
+.evaluation-card .guide-actions .btn .material-icons {
+    margin: 0;
+}
+
+.guide-actions .view-guide {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 6px rgba(157, 157, 189, 0.2);
+}
+
+.guide-actions .view-guide:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(157, 157, 189, 0.3);
+}
+
+.guide-actions .btn-outline:hover {
+    background: var(--bg-light);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.guide-actions .btn-danger:hover {
+    background: var(--error);
+    color: var(--bg-main);
+    border-color: var(--error);
+    transform: translateY(-1px);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-medium);
+    grid-column: 1 / -1;
+}
+
+.empty-state .material-icons {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Form Styles for Create/Edit Guide */
+#createGuideForm,
+#editGuideForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+#guideContent {
+    resize: vertical;
+    min-height: 200px;
+    font-family: inherit;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .guides-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+    }
+
+    .guide-card {
+        padding: var(--spacing-md);
+        border-radius: 12px;
+    }
+
+    .guide-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .guide-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .guide-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .guide-actions .btn {
+        flex: 1;
+        min-width: auto;
+    }
+}
+
+/* Form Row for Side-by-Side Fields - using global styles from modal.css */
+
+/* Guide Meta Top */
+.guide-meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Guide Audience Badge */
+.guide-audience {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.guide-audience .material-icons {
+    font-size: 1rem;
+}
+
+.guide-audience.all {
+    background: var(--info-light);
+    color: var(--primary-light);
+    border: 1px solid var(--primary);
+}
+
+.guide-audience.group {
+    background: var(--warning-light);
+    color: var(--primary-light);
+    border: 1px solid var(--primary);
+}
+
+.guide-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-medium);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.guide-footer .material-icons {
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+/* Guide View Styles */
+.guide-view {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    margin-top: var(--spacing-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.guide-view-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.guide-view-header h2 {
+    margin: var(--spacing-sm) 0 0 0;
+    color: var(--text-dark);
+    font-size: 1.75rem;
+}
+
+.guide-view .guide-actions {
+    margin-top: 40px;
+}
+
+.breadcrumb {
+    margin-bottom: var(--spacing-md);
+}
+
+.breadcrumb .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.breadcrumb .btn-link .material-icons {
+    font-size: 1.125rem;
+    transition: transform 0.2s ease;
+}
+
+.breadcrumb .btn-link:hover {
+    color: var(--primary-dark);
+    background: var(--bg-light);
+    text-decoration: none;
+}
+
+.breadcrumb .btn-link:hover .material-icons {
+    transform: translateX(-2px);
+}
+
+.guide-dates {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.guide-content-full {
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.guide-content-full h1,
+.guide-content-full h2,
+.guide-content-full h3,
+.guide-content-full h4,
+.guide-content-full h5,
+.guide-content-full h6 {
+    margin: 1.5em 0 0.5em;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.guide-content-full h1 { font-size: 2em; }
+.guide-content-full h2 { font-size: 1.75em; }
+.guide-content-full h3 { font-size: 1.5em; }
+.guide-content-full h4 { font-size: 1.25em; }
+.guide-content-full h5 { font-size: 1.1em; }
+.guide-content-full h6 { font-size: 1em; }
+
+.guide-content-full p {
+    margin-bottom: 1em;
+}
+
+.guide-content-full ul,
+.guide-content-full ol {
+    margin: 0 0 1em 1.5em;
+}
+
+.guide-content-full li {
+    margin-bottom: 0.5em;
+}
+
+.guide-content-full code, .summary-content code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    background-color: var(--primary-lighter);
+    padding: 0.2rem 0.3rem;
+    border-radius: 0.4rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.guide-content-full pre, .summary-content pre {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    background-color: var(--primary-lighter);
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+    margin: 0.5em 0;
+}
+
+.guide-content-full pre code, .summary-content pre code {
+    background-color: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.guide-content-full blockquote {
+    border-left: 4px solid var(--primary);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: var(--surface-color);
+    color: var(--text-medium);
+}
+
+.guide-content-full table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+}
+
+.guide-content-full th,
+.guide-content-full td {
+    border: 1px solid var(--border-color);
+    padding: 0.5em;
+    text-align: left;
+}
+
+.guide-content-full th {
+    background: var(--surface-color);
+}
+
+.guide-content-full img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin: 1em 0;
+}
+
+.guide-content-full a {
+    color: rgb(102 102 255);
+    text-decoration: none;
+}
+
+.guide-content-full a:hover {
+    text-decoration: underline;
+}
+
+.guide-content-full hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2em 0;
+}
+
+.view-meta {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .guide-view {
+        padding: var(--spacing-md);
+        border-radius: 12px;
+    }
+
+    .guide-view-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .view-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .guide-dates {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .guide-view .guide-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-lg);
+    }
+
+    .guide-view .guide-actions .btn {
+        flex: 1;
+        min-width: auto;
+    }
+}

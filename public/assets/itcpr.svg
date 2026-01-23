@@ -1,0 +1,11 @@
+<svg width="200" height="60" xmlns="http://www.w3.org/2000/svg" style="text-align: center;">
+    <text x="50%" y="50%" 
+          font-family="Arial, sans-serif" 
+          font-size="40" 
+          font-weight="bold"
+          fill="rgb(157, 157, 189)"
+          text-anchor="middle" 
+          dominant-baseline="middle">
+        ITCPR
+    </text>
+</svg>

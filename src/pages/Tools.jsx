@@ -8,7 +8,7 @@ const itcprResources = [
         items: [
             { url: 'https://itcpr.org', iconClass: 'fa-solid fa-earth-asia', text: 'Website' },
             { url: 'https://webmail.itcpr.org', iconClass: 'fa-solid fa-envelope', text: 'Webmail' },
-            { url: 'https://pay.itcpr.org', iconClass: 'fa-solid fa-credit-card', text: 'Payment' },
+            { url: 'https://account.itcpr.org', iconClass: 'fa-solid fa-credit-card', text: 'Account' },
             { url: 'https://terminal.itcpr.org', iconClass: 'fa-solid fa-laptop-code', text: 'Terminal' },
             { url: 'https://server.itcpr.org', iconClass: 'fa-solid fa-server', text: 'Server' },
             { url: 'https://library.itcpr.org', iconClass: 'fa-solid fa-book-open-reader', text: 'Library' },

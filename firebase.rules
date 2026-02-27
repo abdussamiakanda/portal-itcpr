@@ -1,0 +1,245 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.type == 'admin';
+    }
+
+    function isLead() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'lead' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.position == 'staff';
+    }
+    
+    function isUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'member' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'intern' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'collaborator' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'supervisor';
+    }
+    
+    function isInstructor(groupId, projectId) {
+      return exists(/databases/$(database)/documents/groups/$(groupId)/projects/$(projectId)/contributors/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/groups/$(groupId)/projects/$(projectId)/contributors/$(request.auth.uid)).data.role == 'Instructor';
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if userId == request.auth.uid || request.auth.token.email == resource.data.email || isUser() || isAdmin() || isLead();
+      allow write: if userId == request.auth.uid || request.auth.token.email == resource.data.email || isAdmin() || isLead();
+      
+      match /activity/{activityId} {
+      	allow read: if isUser() || isAdmin() || isLead();
+        allow write: if userId == request.auth.uid || isAdmin() || isLead();
+      }
+
+      // Gamification stats (user's own only)
+      match /gamification/stats {
+        allow read, write: if userId == request.auth.uid || isAdmin() || isLead();
+      }
+
+      // Point transactions (user's own only)
+      match /pointTransactions/{transactionId} {
+        allow read, write: if userId == request.auth.uid || isAdmin() || isLead();
+      }
+
+      // Earned badges (user's own only)
+      match /earnedBadges/{badgeId} {
+        allow read, write: if userId == request.auth.uid || isAdmin() || isLead();
+      }
+    }
+
+    // Rules for meetings subcollection
+    match /meetings/{meetingId} {
+      allow read: if isUser() || isLead() || isAdmin();
+      allow write: if isAdmin() || isLead();
+
+      match /participants/{participantId} {
+        allow read: if isUser() || isLead() || isAdmin();
+        allow write: if isAdmin() || isLead();
+      }
+      
+      match /excuses/{excuseId} {
+        allow read: if isUser() || isLead() || isAdmin();
+        allow write: if isAdmin() || isLead();
+      }
+    }
+    
+    // Terminated collection
+    match /terminated_users/{terminatedId} {
+      allow read: if isAdmin() || isLead();
+      allow write: if isAdmin() || isLead();
+    }
+    
+    // Links collection
+    match /links/meetings {
+      allow read: if isUser() || isAdmin() || isLead();
+    }
+    
+    // Servers collection
+    match /servers/{serverId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isAdmin() || isLead();
+    }
+    
+    // Codes collection
+    match /codes/{codeId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isUser() || isAdmin() || isLead();
+    }
+    
+    // Codes collection
+    match /notes/{noteId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isUser() || isAdmin() || isLead();
+    }
+    
+    // Jupyter collection
+    match /jupyter/{jupyterId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isUser() || isAdmin() || isLead();
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isUser() || isAdmin() || isLead();
+    }
+    
+    match /tempUsers/{tempUserId} {
+      allow read, write: if request.auth != null &&
+        request.auth.token.email == resource.data.email || isAdmin() || isLead();
+    }
+
+    // Groups collection and subcollections
+    match /groups/{groupId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isAdmin() || isLead();
+      
+      // Allow access to members subcollection
+      match /members/{memberId} {
+        allow read: if isUser();
+        allow create: if request.auth != null &&
+            request.auth.uid == request.resource.data.uid || isAdmin() || isLead();
+        allow update, delete: if request.auth.uid == resource.data.uid || isAdmin() || isLead();
+    	}
+
+      // Rules for projects subcollection
+      match /projects/{projectId} {
+        allow read: if isUser();
+        allow write: if isAdmin() || isLead();
+
+        match /contributors/{contributorId} {
+          allow read: if isUser();
+          allow write: if isUser() || isAdmin() || isLead();
+        }
+
+        match /outline/{outlineId} {
+          allow read: if isUser();
+          allow write: if isUser() || isAdmin() || isLead();
+        }
+
+        match /publications/{publicationsId} {
+          allow read: if isUser();
+          allow write: if isUser() || isAdmin() || isLead();
+        }
+        
+        match /summaries/{summaryId} {
+        	allow read: if isUser();
+          allow create: if isUser();
+          allow update: if isUser() || isAdmin() || isLead();
+          allow delete: if isAdmin() || isLead() || isUser();
+        }
+        
+        match /rubrics/{rubricId} {
+          allow read: if isUser();
+          allow write: if isUser() || isAdmin() || isLead() || isInstructor(groupId, projectId);
+        }
+        
+        match /grades/{gradeId} {
+          allow read: if isUser();
+          allow create: if isUser() || isAdmin() || isLead() || isInstructor(groupId, projectId);
+          allow update: if isUser() || isAdmin() || isLead() || isInstructor(groupId, projectId);
+          allow delete: if isAdmin() || isLead() || isInstructor(groupId, projectId) || (isUser() && request.auth.uid == resource.data.instructorId);
+        }
+      }
+
+      // Rules for publications subcollection
+      match /publications/{publicationId} {
+        allow read: if isUser();
+        allow write: if isAdmin() || isLead();
+      }
+    }
+
+    // Applications collection
+    match /applications/{applicationId} {
+      allow read: if request.auth.token.email == resource.data.email || isAdmin() || isLead();
+      allow create: if request.auth != null && 
+                   (request.resource.data.uid == request.auth.uid || isAdmin() || isLead());
+      allow update: if isAdmin() || isLead();
+      allow delete: if isAdmin() || isLead();
+    }
+    
+    // Guides collection
+    match /guides/{guideId} {
+      allow read: if isUser();
+      allow write: if isAdmin() || isLead();
+    }
+    
+    // Projects Article Latex collection
+    match /projects/{projectId} {
+      allow read: if isUser() || isAdmin() || isLead();
+      allow write: if isUser() || isAdmin() || isLead();
+      
+      match /authors/{authorId} {
+      	allow read: if isUser() || isAdmin() || isLead();
+      	allow write: if isUser() || isAdmin() || isLead();
+      }
+      
+      match /figures/{figureId} {
+      	allow read: if isUser() || isAdmin() || isLead();
+      	allow write: if isUser() || isAdmin() || isLead();
+        
+        match /chunks/{chunkId} {
+      		allow read: if isUser() || isAdmin() || isLead();
+      		allow write: if isUser() || isAdmin() || isLead();
+        }
+      }
+      
+    }
+    
+    // Papers collection
+    match /papers/{paperId} {
+      allow read: if isUser();
+      allow create: if isUser();
+      allow update: if isAdmin() || isLead();
+      allow delete: if isAdmin() || isLead();
+    }
+    
+    // Assets Collection    
+    match /assets/{assetsId} {
+      allow read: if isUser();
+      allow create: if isUser();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Finance Collection    
+    match /finance/{financeId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+    
+    // Archive Collection    
+    match /archive/{archiveId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }    
+    match /archive/applications {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read: if isAdmin() || isLead();
+      allow write: if isAdmin() || isLead();
+    }
+  }
+}

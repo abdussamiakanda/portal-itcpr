@@ -71,7 +71,7 @@ export default function Report() {
 
     const getAllReports = async () => {
         try {
-            const reportsRef = collection(db, 'evaluations');
+            const reportsRef = collection(db, 'reports');
             let q;
             if (userData?.position === 'staff') {
                 q = query(reportsRef, orderBy('createdAt', 'desc'));
@@ -196,7 +196,7 @@ export default function Report() {
                 additionalComments: reportFormData.additionalComments
             };
 
-            const reportsRef = collection(db, 'evaluations');
+            const reportsRef = collection(db, 'reports');
             const reportDoc = await addDoc(reportsRef, reportData);
 
             // Track gamification
@@ -220,7 +220,7 @@ export default function Report() {
 
     const handleViewReport = async (reportId) => {
         try {
-            const reportRef = doc(db, 'evaluations', reportId);
+            const reportRef = doc(db, 'reports', reportId);
             const reportSnap = await getDoc(reportRef);
 
             if (!reportSnap.exists()) {
@@ -250,7 +250,7 @@ export default function Report() {
         setLoadingStates(prev => ({ ...prev, deleting: true }));
 
         try {
-            const reportRef = doc(db, 'evaluations', deletingReport);
+            const reportRef = doc(db, 'reports', deletingReport);
             await deleteDoc(reportRef);
 
             toast.success('Report deleted successfully');

@@ -35,60 +35,6 @@ function formatMeetingDateTime(date, time = '00:00', timezone = 'America/Chicago
 }
 
 
-function getInternshipPeriod() {
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-
-    const periods = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-
-    return `${periods[month]}, ${year}`;
-}
-
-async function checkReportStatus(userData, userId) {
-    try {
-        const reportsRef = collection(db, 'reports');
-        const q = query(reportsRef, where('uid', '==', userId));
-        const reportsSnap = await getDocs(q);
-        const reports = reportsSnap.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-        const now = new Date();
-        const day = now.getDate();
-        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-        
-        // Only allow submissions from 21st to end of month
-        if (day < 21 || day > lastDay) {
-            return false;
-        }
-
-        const currentPeriod = getInternshipPeriod();
-        const alreadySubmitted = reports.some(r => 
-            typeof r.title === 'string' && r.title.includes(currentPeriod) && r.uid === userId
-        );
-
-        return !alreadySubmitted;
-    } catch (error) {
-        console.error('Error checking report status:', error);
-        return false;
-    }
-}
-
 async function getMeetingsSnap(userData) {
     const meetingsRef = collection(db, 'meetings');
     let meetingsSnap = null;
@@ -463,7 +409,6 @@ export default function Dashboard() {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [attendance, setAttendance] = useState({ total: 0, attended: 0 });
     const [showDiscordModal, setShowDiscordModal] = useState(false);
-    const [showEvaluationModal, setShowEvaluationModal] = useState(false);
 
     useEffect(() => {
         if (!user || !userData) return;
@@ -503,20 +448,10 @@ export default function Dashboard() {
                     console.error('Error loading secondary dashboard data:', error);
                 });
 
-                // Check for Discord and Evaluation modals (matching old code logic)
-                // First check Discord - if no discordId, show modal
+                // Check for Discord modal – if no discordId, show modal
+                // (Report reminder is shown globally from Layout on all pages)
                 if (!userData.discordId) {
                     setShowDiscordModal(true);
-                }
-                
-                // Check Report:
-                // - Only for interns, and only AFTER they have joined Discord
-                // - Supervisors don't need report modal
-                if (userData.role === 'intern' && userData.discordId) {
-                    const allowReport = await checkReportStatus(userData, user.uid);
-                    if (allowReport) {
-                        setShowEvaluationModal(true);
-                    }
                 }
             } catch (error) {
                 console.error('Error loading dashboard:', error);
@@ -741,37 +676,6 @@ export default function Dashboard() {
                 </ModalFooter>
             </Modal>
 
-            {/* Report Modal */}
-            <Modal isOpen={showEvaluationModal} onClose={() => setShowEvaluationModal(false)}>
-                <ModalHeader onClose={() => setShowEvaluationModal(false)}>
-                    <h3>Report Reminder</h3>
-                </ModalHeader>
-                <ModalBody>
-                    <div className="form-group">
-                        <p>
-                            You have not yet completed your monthly report for this month.
-                            Completing your report is essential to track your progress and growth.
-                        </p>
-                        <p>
-                            Please click the button below to complete your report.
-                        </p>
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    <button className="btn btn-secondary" onClick={() => setShowEvaluationModal(false)}>
-                        Close
-                    </button>
-                    <button 
-                        className="btn btn-primary" 
-                        onClick={() => {
-                            setShowEvaluationModal(false);
-                            navigate('/report');
-                        }}
-                    >
-                        Complete Report
-                    </button>
-                </ModalFooter>
-            </Modal>
         </div>
     );
 }

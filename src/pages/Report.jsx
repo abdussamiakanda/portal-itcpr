@@ -551,11 +551,12 @@ export default function Report() {
                 <Modal 
                     isOpen={showViewModal}
                     onClose={() => setShowViewModal(false)}
+                    className="modal-view-report"
                 >
                     <ModalHeader onClose={() => setShowViewModal(false)}>
                         <h3>{viewingReport.title}</h3>
                     </ModalHeader>
-                    <ModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                    <ModalBody>
                         <h4>Personal Info</h4>
                         <p><strong>Name:</strong> {viewingReport.name || '-'}</p>
                         <p><strong>Group:</strong> {capitalize(viewingReport.group) || '-'}</p>

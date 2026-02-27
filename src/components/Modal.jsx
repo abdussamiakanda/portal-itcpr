@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import '../css/modal.css';
 
-export default function Modal({ isOpen, onClose, children, size = 'default' }) {
+export default function Modal({ isOpen, onClose, children, size = 'default', className = '' }) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -21,12 +21,14 @@ export default function Modal({ isOpen, onClose, children, size = 'default' }) {
         'small': { maxWidth: '50%' }
     }[size] || {};
 
+    const modalClass = ['modal', 'show', className].filter(Boolean).join(' ');
+
     return (
         <>
             <div className="modal-backdrop show" onClick={onClose || undefined}></div>
             <div 
                 id="managementModal" 
-                className="modal show" 
+                className={modalClass}
                 style={sizeClass}
                 onClick={(e) => e.stopPropagation()}
             >

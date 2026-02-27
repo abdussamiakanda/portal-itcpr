@@ -63,6 +63,38 @@
     overflow-y: auto;
 }
 
+/* View Report modal (submitted report) on Report page – contain overflow and scroll body */
+.modal-view-report {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    max-height: 90vh;
+}
+
+.modal-view-report .modal-content {
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-height: 100%;
+}
+
+.modal-view-report .modal-body {
+    overflow: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+}
+
+.modal-view-report .modal-body p {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+}
+
 /* Enhanced modal body for attendance modal only */
 .modal-body .form-group:has(.attendance-container) {
     background: var(--bg-main);

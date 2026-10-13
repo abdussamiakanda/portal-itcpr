@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import LoadingOverlay from './LoadingOverlay';
+import { TopProgress } from './Loading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from './Modal';
 import { useAuth } from '../contexts/AuthContext';
 import { startPortalTimeTracking, stopPortalTimeTracking, trackDailyLogin } from '../utils/gamification';
@@ -13,16 +13,39 @@ import '../css/modal.css';
 export default function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-        const saved = localStorage.getItem('sidebarCollapsed');
-        return saved ? JSON.parse(saved) : false;
+        try {
+            const saved = localStorage.getItem('sidebarCollapsed');
+            return saved ? JSON.parse(saved) : false;
+        } catch {
+            return false;
+        }
     });
     const [showReportReminder, setShowReportReminder] = useState(false);
-    const { loading, user, userData } = useAuth();
+    const { user, userData } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        localStorage.setItem('sidebarCollapsed', JSON.stringify(sidebarCollapsed));
+        try {
+            localStorage.setItem('sidebarCollapsed', JSON.stringify(sidebarCollapsed));
+        } catch {
+            // Storage unavailable (private mode); preference just won't persist
+        }
     }, [sidebarCollapsed]);
+
+    // Close the mobile drawer with Escape and reset scroll on route change
+    useEffect(() => {
+        if (!sidebarOpen) return;
+        const handleKey = (e) => {
+            if (e.key === 'Escape') setSidebarOpen(false);
+        };
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, [sidebarOpen]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
 
     // Portal time tracking and daily login
     useEffect(() => {
@@ -66,7 +89,7 @@ export default function Layout({ children }) {
 
     return (
         <>
-            <LoadingOverlay show={loading} />
+            <TopProgress />
             <section id="portalSection" className="section-portal">
                 <Navbar onMenuToggle={toggleSidebar} />
                 <div className="portal-layout">
@@ -84,7 +107,7 @@ export default function Layout({ children }) {
                         onToggleCollapse={toggleSidebarCollapse}
                     />
                     <main className={`main-content ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-                        <div id="contentArea">
+                        <div id="contentArea" key={location.pathname} className="page-transition">
                             {children || <Outlet />}
                         </div>
                     </main>

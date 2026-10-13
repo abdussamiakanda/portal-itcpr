@@ -5,7 +5,7 @@ import { db } from '../contexts/AuthContext';
 import { doc, getDoc, collection, query, where, limit, getDocs, orderBy } from 'firebase/firestore';
 import { DateTime } from 'luxon';
 import { formatDate, capitalize, joinMeeting } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton, Skeleton } from '../components/Loading';
 import StatCard from '../components/StatCard';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import { getDiscordAuthUrl } from '../utils/discord';
@@ -395,6 +395,12 @@ async function getAttendanceStats(groupId, email) {
     }
 }
 
+function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+}
 
 export default function Dashboard() {
     const { user, userData } = useAuth();
@@ -409,6 +415,7 @@ export default function Dashboard() {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [attendance, setAttendance] = useState({ total: 0, attended: 0 });
     const [showDiscordModal, setShowDiscordModal] = useState(false);
+    const [secondaryLoading, setSecondaryLoading] = useState(true);
 
     useEffect(() => {
         if (!user || !userData) return;
@@ -434,6 +441,7 @@ export default function Dashboard() {
                 setInitialLoad(false);
 
                 // Load remaining data in parallel (non-blocking)
+                setSecondaryLoading(true);
                 Promise.all([
                     getProjectStats(userData.group, user.uid),
                     getCurrentProjects(userData.group, user.uid),
@@ -446,6 +454,8 @@ export default function Dashboard() {
                         setAttendance(att);
                     }).catch(error => {
                     console.error('Error loading secondary dashboard data:', error);
+                }).finally(() => {
+                    setSecondaryLoading(false);
                 });
 
                 // Check for Discord modal – if no discordId, show modal
@@ -464,15 +474,15 @@ export default function Dashboard() {
     }, [user, userData]);
 
     if (loading && initialLoad) {
-        return <LoadingOverlay show={true} />;
+        return <PageSkeleton variant="dashboard" />;
     }
 
     return (
         <div className="dashboard-container">
             <div className="page-header">
                 <div>
-                    <h2>Dashboard</h2>
-                    <p className="text-medium">Welcome back to your research portal</p>
+                    <h2>{getGreeting()}{userData?.name ? `, ${userData.name.split(' ')[0]}` : ''}</h2>
+                    <p className="text-medium">Here's what's happening across your research workspace.</p>
                 </div>
             </div>
 
@@ -494,6 +504,7 @@ export default function Dashboard() {
                 <StatCard
                     icon="science"
                     title="Group Projects"
+                    loading={secondaryLoading}
                     value={`Total: ${projectStats.total}`}
                     info={`Involved in ${projectStats.involved} project${projectStats.involved !== 1 ? 's' : ''}`}
                 />
@@ -501,6 +512,7 @@ export default function Dashboard() {
                 <StatCard
                     icon="notifications"
                     title="Meeting Attendance"
+                    loading={secondaryLoading}
                     value={`Attnd: ${attendance.attended}`}
                     info={`Attended ${attendance.attended} out of ${attendance.total} meeting${attendance.total !== 1 ? 's' : ''}`}
                 />
@@ -508,6 +520,7 @@ export default function Dashboard() {
                 <StatCard
                     icon="science"
                     title="Project Contribution"
+                    loading={secondaryLoading}
                     value={`Total: ${projectStats.summary + projectStats.outline}`}
                     info={`${projectStats.outline} outlines and ${projectStats.summary} summaries`}
                 />
@@ -521,7 +534,17 @@ export default function Dashboard() {
                     </button>
                 </div>
                 <div className="dashboard-meetings-list">
-                    {upcomingMeetings.length > 0 ? (
+                    {secondaryLoading ? (
+                        [0, 1].map(i => (
+                            <div key={i} className="dashboard-meeting-card" aria-hidden="true">
+                                <Skeleton width="56px" height="56px" radius="14px" />
+                                <div className="dashboard-meeting-info">
+                                    <Skeleton width="70%" height="1rem" />
+                                    <Skeleton width="50%" height="0.75rem" style={{ marginTop: '0.6rem' }} />
+                                </div>
+                            </div>
+                        ))
+                    ) : upcomingMeetings.length > 0 ? (
                         upcomingMeetings.slice(0, 2).map(meeting => (
                             <div key={meeting.id} className="dashboard-meeting-card" data-meeting-id={meeting.id}>
                                 <div className="dashboard-meeting-icon">
@@ -571,7 +594,17 @@ export default function Dashboard() {
                     </button>
                 </div>
                 <div className="projects-overview projects-grid">
-                    {currentProjects.length > 0 ? (
+                    {secondaryLoading ? (
+                        [0, 1, 2].map(i => (
+                            <div key={i} className="project-card" aria-hidden="true">
+                                <Skeleton width="75%" height="1.1rem" />
+                                <Skeleton width="40%" height="0.75rem" style={{ marginTop: '0.9rem' }} />
+                                <Skeleton height="0.75rem" style={{ marginTop: '1.1rem' }} />
+                                <Skeleton width="85%" height="0.75rem" style={{ marginTop: '0.5rem' }} />
+                                <Skeleton width="120px" height="36px" radius="10px" style={{ marginTop: '1.4rem' }} />
+                            </div>
+                        ))
+                    ) : currentProjects.length > 0 ? (
                         currentProjects.slice(0, 3).map(project => {
                             const description = project.description?.length > 300 
                                 ? project.description.slice(0, 300).trim() + '...'

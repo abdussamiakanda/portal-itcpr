@@ -7,7 +7,8 @@ import { formatDate, capitalize, formatContent, renderAndReplaceLatex, addTarget
 import { sendEmail, sendContributorEmail, getEmailTemplate } from '../utils/email';
 import { uploadFileToSupabase } from '../utils/github';
 import { PORTAL_URL } from '../config/env';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import { useToast } from '../components/Toast';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -20,6 +21,7 @@ export default function Project() {
     const toast = useToast();
     const { id: projectId } = useParams();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [project, setProject] = useState(null);
     const [leadData, setLeadData] = useState(null);
     const [contributors, setContributors] = useState([]);
@@ -602,8 +604,8 @@ export default function Project() {
         setShowEditProjectModal(true);
     };
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="detail" />;
     }
 
     if (!project) {

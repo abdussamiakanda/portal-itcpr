@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './components/Toast';
-import LoadingOverlay from './components/LoadingOverlay';
+import { AppSplash } from './components/Loading';
 import Layout from './components/Layout';
 import './css/style.css';
 
@@ -24,6 +24,8 @@ import Privacy from './pages/Privacy';
 import Activity from './pages/Activity';
 import Calendar from './pages/Calendar';
 import NotFound from './pages/NotFound';
+// Imported after every page so its shared-pattern refinements win the cascade
+import './css/premium.css';
 
 // Placeholder components for future implementation
 const Meeting = () => <div>Meeting Detail Page</div>;
@@ -51,7 +53,7 @@ function ProtectedRoute({ children }) {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <LoadingOverlay show={true} />;
+        return <AppSplash />;
     }
 
     if (!user) {
@@ -65,7 +67,7 @@ function AppRoutes() {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <LoadingOverlay show={true} />;
+        return <AppSplash />;
     }
 
     return (

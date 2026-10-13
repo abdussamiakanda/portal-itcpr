@@ -3,7 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { db, auth } from '../contexts/AuthContext';
 import { collection, query, orderBy, getDocs, addDoc, deleteDoc, doc, getDoc, where, serverTimestamp } from 'firebase/firestore';
 import { capitalize } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
@@ -40,6 +41,7 @@ export default function Report() {
     const toast = useToast();
     
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [reports, setReports] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [allowReport, setAllowReport] = useState(false);
@@ -284,8 +286,8 @@ export default function Report() {
 
     const isLoading = Object.values(loadingStates).some(state => state);
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="list" title="Reports" />;
     }
 
     return (
@@ -536,7 +538,7 @@ export default function Report() {
                     >
                         Cancel
                     </button>
-                    <button 
+                    <button aria-busy={loadingStates.submitting} 
                         className="btn btn-primary" 
                         onClick={handleSubmitReport}
                         disabled={loadingStates.submitting}

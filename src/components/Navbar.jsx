@@ -53,7 +53,8 @@ export default function Navbar({ onMenuToggle }) {
             setScrolled(window.scrollY > 10);
         };
 
-        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -68,12 +69,21 @@ export default function Navbar({ onMenuToggle }) {
             }
         };
 
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setAppsMenuOpen(false);
+                setUserMenuOpen(false);
+            }
+        };
+
         if (appsMenuOpen || userMenuOpen) {
             document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('keydown', handleEscape);
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
         };
     }, [appsMenuOpen, userMenuOpen]);
 
@@ -82,13 +92,13 @@ export default function Navbar({ onMenuToggle }) {
     return (
         <nav className={`nav-bar ${scrolled ? 'scrolled' : ''}`} ref={navRef}>
             <div className="nav-left">
-                <button className="menu-toggle" onClick={onMenuToggle} aria-label="Toggle menu">
+                <button type="button" className="menu-toggle" onClick={onMenuToggle} aria-label="Toggle menu">
                     <span className="material-icons">menu</span>
                 </button>
-                <div className="nav-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
-                    <span className="material-icons brand-icon" id="itcpr_logo_top">{currentLogo}</span>
-                    <span className="brand-text">ITCPR Portal</span>
-                </div>
+                <button type="button" className="nav-brand" onClick={() => navigate('/dashboard')} aria-label="ITCPR Portal home">
+                    <span key={currentLogo} className="material-icons brand-icon" id="itcpr_logo_top" aria-hidden="true">{currentLogo}</span>
+                    <span className="brand-text">ITCPR <span className="brand-accent">Portal</span></span>
+                </button>
             </div>
             <div className="nav-right">
                 <div className="nav-actions">
@@ -97,11 +107,12 @@ export default function Navbar({ onMenuToggle }) {
                             className={`apps-icon ${appsMenuOpen ? 'active' : ''}`}
                             onClick={() => setAppsMenuOpen(!appsMenuOpen)}
                             aria-label="Apps menu"
+                            aria-haspopup="true"
                             aria-expanded={appsMenuOpen}
                         >
                             <span className="material-icons">apps</span>
                         </button>
-                        <div className={`apps-menu ${appsMenuOpen ? 'active' : ''}`} id="appsMenu">
+                        <div className={`apps-menu ${appsMenuOpen ? 'active' : ''}`} id="appsMenu" aria-hidden={!appsMenuOpen}>
                             <div className="apps-menu-header">
                                 <span className="material-icons">apps</span>
                                 <span>Quick Links</span>
@@ -115,8 +126,9 @@ export default function Navbar({ onMenuToggle }) {
                                         rel="noopener noreferrer"
                                         className="app-link"
                                         onClick={() => setAppsMenuOpen(false)}
+                                        tabIndex={appsMenuOpen ? 0 : -1}
                                     >
-                                        <i className={app.iconClass}></i>
+                                        <i className={app.iconClass} aria-hidden="true"></i>
                                         <span>{app.text}</span>
                                     </a>
                                 ))}
@@ -127,8 +139,9 @@ export default function Navbar({ onMenuToggle }) {
                                         rel="noopener noreferrer"
                                         className="app-link"
                                         onClick={() => setAppsMenuOpen(false)}
+                                        tabIndex={appsMenuOpen ? 0 : -1}
                                     >
-                                        <i className="fa-solid fa-user-tie"></i>
+                                        <i className="fa-solid fa-user-tie" aria-hidden="true"></i>
                                         <span>Staff</span>
                                     </a>
                                 )}
@@ -140,6 +153,7 @@ export default function Navbar({ onMenuToggle }) {
                             className={`user-avatar-btn ${userMenuOpen ? 'active' : ''}`}
                             onClick={() => setUserMenuOpen(!userMenuOpen)}
                             aria-label="User menu"
+                            aria-haspopup="true"
                             aria-expanded={userMenuOpen}
                         >
                             <img 
@@ -150,7 +164,7 @@ export default function Navbar({ onMenuToggle }) {
                             />
                             <span className={`material-icons chevron-icon ${userMenuOpen ? 'open' : ''}`}>expand_more</span>
                         </button>
-                        <div className={`user-dropdown-menu ${userMenuOpen ? 'active' : ''}`}>
+                        <div className={`user-dropdown-menu ${userMenuOpen ? 'active' : ''}`} aria-hidden={!userMenuOpen}>
                             <div className="user-dropdown-header">
                                 <img 
                                     src={userData.photoURL || '/assets/default-avatar.svg'} 

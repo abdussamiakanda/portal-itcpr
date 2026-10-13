@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { db, auth } from '../contexts/AuthContext';
 import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp, collection, query, getDocs, where } from 'firebase/firestore';
 import { capitalize, formatContent, formatDate } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
@@ -29,6 +30,7 @@ export default function Guide() {
     const contentRef = useRef(null);
     
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [guide, setGuide] = useState(null);
     const [error, setError] = useState(null);
     
@@ -213,8 +215,8 @@ export default function Guide() {
     const canDelete = userData?.type === 'admin' || userData?.role === 'lead' || userData?.uid === guide?.author;
     const isLoading = Object.values(loadingStates).some(state => state);
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="article" />;
     }
 
     if (error || !guide) {
@@ -392,7 +394,7 @@ export default function Guide() {
                     >
                         Cancel
                     </button>
-                    <button 
+                    <button aria-busy={loadingStates.updating} 
                         className="btn btn-primary" 
                         onClick={handleUpdateGuide}
                         disabled={loadingStates.updating}

@@ -6,7 +6,7 @@ import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from '
 import { DateTime } from 'luxon';
 import { capitalize, joinMeeting, formatDate } from '../utils/helpers';
 import { supabaseConfig } from '../config';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
 import StatCard from '../components/StatCard';
 import { useToast } from '../components/Toast';
 import '../css/group.css';
@@ -184,7 +184,7 @@ export default function Group() {
     const canManage = userData?.role === 'lead' || userData?.type === 'admin';
 
     if (loading && initialLoad) {
-        return <LoadingOverlay show={true} />;
+        return <PageSkeleton variant="detail" />;
     }
 
     if (!groupData) {

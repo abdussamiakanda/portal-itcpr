@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { db, auth } from '../contexts/AuthContext';
 import { collection, query, orderBy, getDocs, limit, where, doc, getDoc } from 'firebase/firestore';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import { DateTime } from 'luxon';
 import { getUserGamificationStats, getUserBadges, BADGES } from '../utils/gamification';
 import * as LucideIcons from 'lucide-react';
@@ -51,6 +52,7 @@ function formatActivityDateTime(date) {
 export default function Activity() {
     const { user, userData } = useAuth();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [stats, setStats] = useState(null);
     const [badges, setBadges] = useState([]);
     const [recentTransactions, setRecentTransactions] = useState([]);
@@ -140,8 +142,8 @@ export default function Activity() {
         loadActivities();
     }, [user, userData]);
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="dashboard" />;
     }
 
     const formatPoints = (points) => {

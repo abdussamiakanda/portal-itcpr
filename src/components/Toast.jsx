@@ -3,6 +3,13 @@ import '../css/toast.css';
 
 const ToastContext = createContext(null);
 
+const TOAST_ICONS = {
+    success: 'check_circle',
+    error: 'error',
+    warning: 'warning',
+    info: 'info',
+};
+
 export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
 
@@ -37,29 +44,31 @@ export function ToastProvider({ children }) {
     return (
         <ToastContext.Provider value={value}>
             {children}
-            <div className="toast-container">
+            <div className="toast-container" role="region" aria-live="polite" aria-label="Notifications">
                 {toasts.map(toast => (
                     <div 
                         key={toast.id} 
                         className={`toast toast-${toast.type}`}
+                        role={toast.type === 'error' ? 'alert' : 'status'}
+                        style={toast.duration > 0 ? { '--toast-duration': `${toast.duration}ms` } : undefined}
                         onClick={() => removeToast(toast.id)}
                     >
-                        <span className="toast-icon">
-                            {toast.type === 'success' && '✓'}
-                            {toast.type === 'error' && '✕'}
-                            {toast.type === 'warning' && '⚠'}
-                            {toast.type === 'info' && 'ℹ'}
+                        <span className="toast-icon material-icons" aria-hidden="true">
+                            {TOAST_ICONS[toast.type] || TOAST_ICONS.info}
                         </span>
                         <span className="toast-message">{toast.message}</span>
                         <button 
+                            type="button"
+                            aria-label="Dismiss notification"
                             className="toast-close"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 removeToast(toast.id);
                             }}
                         >
-                            ×
+                            <span className="material-icons" aria-hidden="true">close</span>
                         </button>
+                        {toast.duration > 0 && <span className="toast-progress" aria-hidden="true" />}
                     </div>
                 ))}
             </div>

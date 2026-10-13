@@ -4,7 +4,8 @@ import { db } from '../contexts/AuthContext';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { capitalize } from '../utils/helpers';
 import { DateTime } from 'luxon';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import { useToast } from '../components/Toast';
 import '../css/people.css';
 import '../css/dashboard.css';
@@ -13,6 +14,7 @@ import '../css/projects.css';
 export default function People() {
     const { userData } = useAuth();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -107,8 +109,8 @@ export default function People() {
         setFilteredUsers(filtered);
     }, [users, searchTerm, groupFilter, roleFilter]);
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="people" title="ITCPR Members" />;
     }
 
     return (

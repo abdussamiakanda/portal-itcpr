@@ -7,7 +7,8 @@ import { DateTime } from 'luxon';
 import { capitalize, joinMeeting } from '../utils/helpers';
 import { sendMeetingEmail, sendMeetingDeleteEmail, sendAttendanceEmail } from '../utils/email';
 import { sendMessageToChannel } from '../utils/discord';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import { useToast } from '../components/Toast';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -47,6 +48,7 @@ export default function Meetings() {
     const navigate = useNavigate();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [meetings, setMeetings] = useState([]);
     const [filteredMeetings, setFilteredMeetings] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -710,8 +712,8 @@ export default function Meetings() {
         }
     };
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="list" title="Group Meetings" action />;
     }
 
     const isLoading = Object.values(loadingStates).some(state => state);
@@ -888,7 +890,7 @@ export default function Meetings() {
                         >
                             Cancel
                         </button>
-                        <button 
+                        <button aria-busy={loadingStates.scheduling} 
                             className="btn btn-primary" 
                             onClick={handleSubmitMeeting}
                             disabled={loadingStates.scheduling}
@@ -980,7 +982,7 @@ export default function Meetings() {
                         >
                             Cancel
                         </button>
-                        <button 
+                        <button aria-busy={loadingStates.updating} 
                             className="btn btn-primary" 
                             onClick={handleUpdateMeeting}
                             disabled={loadingStates.updating}
@@ -1114,7 +1116,7 @@ export default function Meetings() {
                             Close
                         </button>
                         {!viewingAttendance && (
-                            <button 
+                            <button aria-busy={loadingStates.addingAttendance} 
                                 className="btn btn-primary" 
                                 onClick={handleUpdateAttendance}
                                 disabled={loadingStates.addingAttendance}
@@ -1207,7 +1209,7 @@ export default function Meetings() {
                     >
                         Cancel
                     </button>
-                    <button 
+                    <button aria-busy={loadingStates.submittingExcuse} 
                         className="btn btn-primary" 
                         onClick={handleSubmitExcuse}
                         disabled={loadingStates.submittingExcuse}

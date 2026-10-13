@@ -4,7 +4,8 @@ import { db } from '../contexts/AuthContext';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { DateTime } from 'luxon';
 import { API_ENDPOINTS } from '../config/env';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import '../css/style.css';
 import '../css/calendar.css';
@@ -12,6 +13,7 @@ import '../css/calendar.css';
 export default function Calendar() {
     const { userData } = useAuth();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [meetings, setMeetings] = useState([]);
     const [icsMeetings, setIcsMeetings] = useState([]);
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -162,8 +164,8 @@ export default function Calendar() {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="calendar" title="Calendar" />;
     }
 
     return (

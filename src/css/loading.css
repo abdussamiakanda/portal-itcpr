@@ -1,0 +1,352 @@
+/* ==========================================================================
+   Loading states
+   ========================================================================== */
+
+/* Skeleton primitive -------------------------------------------------------- */
+.skeleton {
+    display: block;
+    width: 100%;
+    height: 1rem;
+    border-radius: 6px;
+    background:
+        linear-gradient(90deg,
+            rgba(var(--primary-rgb), 0.10) 0%,
+            rgba(var(--primary-rgb), 0.20) 40%,
+            rgba(var(--primary-rgb), 0.10) 80%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.page-skeleton {
+    /* Content fades in after a short beat so fast loads never flash grey */
+    animation: skeletonReveal 0.4s var(--ease-out) 0.12s backwards;
+}
+
+@keyframes skeletonReveal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.skeleton-header {
+    animation: none;
+}
+
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.skeleton-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+}
+
+.skeleton-stack-lg {
+    gap: var(--spacing-sm);
+}
+
+.skeleton-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.skeleton-card,
+.skeleton-panel {
+    background: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xs);
+    padding: 1.35rem 1.5rem;
+}
+
+.skeleton-panel {
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-panel > .skeleton-grid {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+}
+
+.skeleton-card-footer {
+    justify-content: space-between;
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.skeleton-list-row {
+    flex-wrap: nowrap;
+    gap: 1rem;
+}
+
+.skeleton-grid {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-grid-stats {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    margin-bottom: var(--spacing-xl);
+}
+
+.skeleton-grid-cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.skeleton-grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+
+.skeleton-toolbar {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-tabs {
+    display: flex;
+    gap: 1.75rem;
+    padding: 0 0.5rem 0.9rem;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-subtle);
+    overflow: hidden;
+}
+
+.skeleton-hero h2,
+.skeleton-header h2 {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.skeleton-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.skeleton-article {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.skeleton-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-top: 1.25rem;
+}
+
+/* Staggered fade so the placeholder feels alive, not frozen */
+.skeleton-item {
+    animation: fadeUp 0.5s var(--ease-out) backwards;
+    animation-delay: calc(0.12s + var(--i, 0) * 60ms);
+    min-width: 0;
+}
+
+.skeleton-stack > .skeleton-item,
+.skeleton-grid > .skeleton-item {
+    display: block;
+}
+
+.skeleton-tabs > .skeleton-item {
+    display: contents;
+}
+
+@media (max-width: 640px) {
+    .skeleton-hide-sm {
+        display: none;
+    }
+}
+
+/* App boot splash ------------------------------------------------------------ */
+.app-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background:
+        radial-gradient(600px 300px at 50% 35%, rgba(var(--accent-rgb), 0.10), transparent 70%),
+        var(--bg-light);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out);
+}
+
+.app-splash.is-visible {
+    opacity: 1;
+}
+
+.app-splash-mark {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: var(--gradient-primary);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 14px 32px -10px rgba(var(--primary-rgb), 0.9);
+    animation: splashPulse 1.8s var(--ease-in-out) infinite;
+}
+
+.app-splash-mark .material-icons {
+    font-size: 2rem;
+}
+
+@keyframes splashPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.app-splash-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+}
+
+.app-splash-name span {
+    color: var(--primary-dark);
+}
+
+.app-splash-bar {
+    width: 140px;
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(var(--primary-rgb), 0.18);
+    overflow: hidden;
+}
+
+.app-splash-bar span {
+    display: block;
+    width: 40%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--gradient-accent);
+    animation: indeterminate 1.2s var(--ease-in-out) infinite;
+}
+
+@keyframes indeterminate {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(250%); }
+}
+
+/* Top progress bar ------------------------------------------------------------ */
+.top-progress {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 1001;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.top-progress span {
+    display: block;
+    height: 100%;
+    background: var(--gradient-accent);
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.6);
+    transform-origin: left;
+}
+
+/* Eases toward ~85% while running, then completes on finish */
+.top-progress.is-running span {
+    animation: progressRun 8s cubic-bezier(0.1, 0.7, 0.2, 1) forwards;
+}
+
+.top-progress.is-done span {
+    transform: scaleX(1);
+    opacity: 0;
+    transition: transform 0.25s var(--ease-out), opacity 0.3s ease 0.15s;
+}
+
+@keyframes progressRun {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(0.85); }
+}
+
+/* Inline status (single-purpose flows) ---------------------------------------- */
+.inline-status {
+    max-width: 420px;
+    margin: 12vh auto 0;
+    text-align: center;
+    animation: fadeUp 0.5s var(--ease-out) backwards;
+}
+
+.inline-status-icon {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--primary-lighter);
+    color: var(--primary-darker);
+}
+
+.inline-status-icon .material-icons {
+    font-size: 1.9rem;
+}
+
+.inline-status-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: rgb(var(--accent-rgb));
+    animation: spin 0.9s linear infinite;
+}
+
+.inline-status h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+}
+
+.inline-status p {
+    color: var(--text-medium);
+}
+
+/* Busy buttons -------------------------------------------------------------- */
+/* Spinner sits beside the existing "Saving…" label; leading icons step aside */
+.btn[aria-busy="true"] {
+    pointer-events: none;
+    cursor: progress;
+}
+
+.btn[aria-busy="true"] > .material-icons {
+    display: none;
+}
+
+.btn[aria-busy="true"]::before {
+    content: '';
+    width: 0.95em;
+    height: 0.95em;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    animation: spin 0.7s linear infinite;
+}
+
+.btn-outline[aria-busy="true"]::before,
+.btn-secondary[aria-busy="true"]::before {
+    border-color: rgba(var(--primary-rgb), 0.3);
+    border-top-color: var(--primary-darker);
+}

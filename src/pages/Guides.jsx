@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { db, auth } from '../contexts/AuthContext';
 import { collection, query, orderBy, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, serverTimestamp, where } from 'firebase/firestore';
 import { capitalize } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
@@ -28,6 +29,7 @@ export default function Guides() {
     const navigate = useNavigate();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [guides, setGuides] = useState([]);
     const [filteredGuides, setFilteredGuides] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -256,8 +258,8 @@ export default function Guides() {
     const canDelete = (guide) => userData?.type === 'admin' || userData?.role === 'lead' || userData?.uid === guide?.author;
     const isLoading = Object.values(loadingStates).some(state => state);
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="grid" title="Guides & Tutorials" action />;
     }
 
     return (
@@ -443,7 +445,7 @@ export default function Guides() {
                     >
                         Cancel
                     </button>
-                    <button 
+                    <button aria-busy={loadingStates.creating} 
                         className="btn btn-primary" 
                         onClick={handleSubmitGuide}
                         disabled={loadingStates.creating}
@@ -529,7 +531,7 @@ export default function Guides() {
                         >
                             Cancel
                         </button>
-                        <button 
+                        <button aria-busy={loadingStates.updating} 
                             className="btn btn-primary" 
                             onClick={handleUpdateGuide}
                             disabled={loadingStates.updating}

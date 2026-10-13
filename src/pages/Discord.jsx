@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { db, auth } from '../contexts/AuthContext';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { DISCORD_GUILD_ID, API_ENDPOINTS, DISCORD_ROLE_IDS } from '../config/env';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { InlineStatus } from '../components/Loading';
 import '../css/style.css';
 
 function getAccessTokenFromUrl() {
@@ -106,6 +106,12 @@ export default function Discord() {
         }
     }, [user, navigate]);
 
-    return <LoadingOverlay show={true} />;
+    return (
+        <InlineStatus
+            icon="forum"
+            title="Connecting to Discord"
+            message="Linking your account — you'll be redirected in a moment."
+        />
+    );
 }
 

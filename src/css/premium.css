@@ -1,0 +1,391 @@
+/* ==========================================================================
+   Premium polish layer
+   Loaded last (see App.jsx) so it can harmonise shared patterns that are
+   defined in individual page stylesheets: surfaces, cards, badges, tabs,
+   empty states and entrance motion. Layout rules stay in the page files.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+.page-header {
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.6s var(--ease-out) backwards;
+}
+
+.page-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: var(--text-dark);
+    margin-bottom: 0.3rem;
+}
+
+.page-header p.text-medium,
+.page-header > div > p {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Surfaces
+   -------------------------------------------------------------------------- */
+.content-section,
+.tools-category {
+    border-radius: var(--border-radius-lg);
+    border-color: var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-main);
+}
+
+.tools-category h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    border-bottom-color: var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Cards — one consistent elevation and hover language
+   -------------------------------------------------------------------------- */
+.project-card,
+.people-card,
+.guide-card,
+.meeting-card,
+.publication-card,
+.dashboard-meeting-card,
+.group-card,
+.application-card,
+.evaluation-card {
+    border-radius: var(--border-radius-lg);
+    border-color: var(--border-subtle);
+    background: var(--gradient-surface);
+    box-shadow: var(--shadow-sm);
+    transition:
+        transform var(--duration-slow) var(--ease-out),
+        box-shadow var(--duration-slow) var(--ease-out),
+        border-color var(--duration) var(--ease-out);
+}
+
+.project-card:hover,
+.people-card:hover,
+.guide-card:hover,
+.meeting-card:hover,
+.publication-card:hover,
+.dashboard-meeting-card:hover,
+.group-card:hover,
+.application-card:hover,
+.evaluation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.item-card,
+.issue-card {
+    border-radius: var(--border-radius);
+    border-color: var(--border-subtle);
+    transition:
+        border-color var(--duration) var(--ease-out),
+        box-shadow var(--duration) var(--ease-out),
+        background-color var(--duration) var(--ease-out);
+}
+
+.item-card:hover,
+.issue-card:hover {
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.project-title,
+.project-card h4,
+.guide-card h3,
+.guide-card h4,
+.people-card h3,
+.people-card h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+}
+
+.project-description {
+    color: var(--text-medium);
+    line-height: 1.6;
+}
+
+/* Dashboard meeting icon uses the brand gradient on hover */
+.dashboard-meeting-icon {
+    border-radius: 14px;
+    transition: transform var(--duration-slow) var(--ease-spring), background var(--duration) var(--ease-out), color var(--duration) var(--ease-out), box-shadow var(--duration) var(--ease-out);
+}
+
+.dashboard-meeting-card:hover .dashboard-meeting-icon {
+    background: var(--gradient-primary);
+    transform: scale(1.06) rotate(-4deg);
+    box-shadow: 0 8px 18px -6px rgba(var(--primary-rgb), 0.8);
+}
+
+/* Tools */
+.tool-item {
+    background: var(--bg-main);
+    border-color: var(--border-subtle);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    transition:
+        transform var(--duration) var(--ease-out),
+        box-shadow var(--duration) var(--ease-out),
+        border-color var(--duration) var(--ease-out),
+        background-color var(--duration) var(--ease-out);
+}
+
+.tool-item i {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    border-radius: 10px;
+    background: var(--primary-lighter);
+    color: var(--primary-dark);
+    transition: transform var(--duration-slow) var(--ease-spring), background var(--duration) var(--ease-out), color var(--duration) var(--ease-out);
+}
+
+.tool-item:hover {
+    background: var(--bg-main);
+    border-color: rgba(var(--accent-rgb), 0.35);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tool-item:hover i {
+    background: var(--gradient-primary);
+    color: #fff;
+    transform: scale(1.08) rotate(-6deg);
+}
+
+/* --------------------------------------------------------------------------
+   Badges
+   -------------------------------------------------------------------------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.28rem 0.7rem;
+    border-radius: var(--border-radius-pill);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-color: transparent;
+}
+
+.status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.status-badge.active::before {
+    animation: pulseDot 2s var(--ease-in-out) infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent); }
+    50% { box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 8%, transparent); }
+}
+
+.header-badges .group-badge,
+.header-badges .contributor-count-badge,
+.header-badges .publication-count-badge,
+.header-badges .project-type,
+.project-type-badge {
+    padding: 0.28rem 0.7rem;
+    border-radius: var(--border-radius-pill);
+    font-size: 0.72rem;
+    border-color: var(--border-subtle);
+    background: var(--bg-light);
+}
+
+/* --------------------------------------------------------------------------
+   Tabs & segmented filters
+   -------------------------------------------------------------------------- */
+.project-tabs {
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.project-tab {
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+    transition: color var(--duration) var(--ease-out), background-color var(--duration) var(--ease-out);
+}
+
+.project-tab::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--gradient-accent);
+    transform: scaleX(0);
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.project-tab:hover {
+    color: var(--text-dark);
+    background: rgba(var(--primary-rgb), 0.06);
+}
+
+.project-tab.active {
+    color: var(--primary-darker);
+    background: transparent;
+}
+
+.project-tab.active::after {
+    transform: scaleX(1);
+}
+
+/* project.css hides tab pseudo-elements on mobile; keep the active indicator */
+@media (max-width: 768px) {
+    .project-tab.active::after {
+        display: block;
+    }
+}
+
+.filter-buttons {
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--border-subtle);
+    padding: 4px;
+    border-radius: 12px;
+}
+
+.filter-buttons button {
+    border-radius: 9px;
+    padding: 0.5rem 1rem;
+    transition: background-color var(--duration) var(--ease-out), color var(--duration) var(--ease-out), box-shadow var(--duration) var(--ease-out);
+}
+
+.filter-buttons button:hover:not(.active) {
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.filter-buttons button.active,
+.filter-buttons button.active:hover {
+    background: var(--bg-main);
+    color: var(--primary-darker);
+    box-shadow: var(--shadow-sm), 0 0 0 1px var(--border-subtle);
+    transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+:root {
+    accent-color: rgb(var(--accent-rgb));
+}
+
+.form-control {
+    width: 100%;
+    font-family: inherit;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.84rem;
+    color: var(--text-dark);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-light);
+}
+
+/* --------------------------------------------------------------------------
+   Empty states
+   -------------------------------------------------------------------------- */
+.empty-state {
+    border: 1.5px dashed var(--border-color);
+    border-radius: var(--border-radius-lg);
+    background:
+        radial-gradient(400px 160px at 50% 0%, rgba(var(--accent-rgb), 0.06), transparent 70%),
+        var(--bg-main);
+    animation: scaleIn 0.5s var(--ease-out) backwards;
+}
+
+.empty-state > .material-icons {
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem !important;
+    border-radius: 18px;
+    background: var(--primary-lighter);
+    color: var(--primary-dark) !important;
+    margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Staggered entrance for collections
+   `backwards` fill keeps no transform after the animation ends.
+   -------------------------------------------------------------------------- */
+.overview-container > *,
+.projects-grid > *,
+.guides-grid > *,
+.people-grid > *,
+.members-grid > *,
+.tools-grid > *,
+.tools-container > *,
+.dashboard-meetings-list > *,
+.meetings-list > *,
+.items-list > *,
+.stats-grid > *,
+.groups-grid > *,
+.applications-grid > * {
+    animation: fadeUp 0.55s var(--ease-out) backwards;
+}
+
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(1) { animation-delay: 40ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(2) { animation-delay: 80ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(3) { animation-delay: 120ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(4) { animation-delay: 160ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(5) { animation-delay: 200ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(6) { animation-delay: 240ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(7) { animation-delay: 280ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(8) { animation-delay: 320ms; }
+:is(.overview-container, .projects-grid, .guides-grid, .people-grid, .members-grid, .tools-grid, .tools-container, .dashboard-meetings-list, .meetings-list, .items-list, .stats-grid, .groups-grid, .applications-grid) > :nth-child(n+9) { animation-delay: 360ms; }
+
+/* Sections fade in after the header */
+.dashboard-container > .section,
+.dashboard-container > .content-section {
+    animation: fadeUp 0.6s var(--ease-out) 0.12s backwards;
+}
+
+.dashboard-container > .section + .section {
+    animation-delay: 0.2s;
+}
+
+/* Fine pointer devices only: don't leave cards "stuck" lifted after a tap */
+@media (hover: none) {
+    .project-card:hover,
+    .people-card:hover,
+    .guide-card:hover,
+    .meeting-card:hover,
+    .publication-card:hover,
+    .dashboard-meeting-card:hover,
+    .group-card:hover,
+    .application-card:hover,
+    .evaluation-card:hover,
+    .stat-card:hover,
+    .tool-item:hover {
+        transform: none;
+    }
+}

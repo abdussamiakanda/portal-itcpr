@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { db } from '../contexts/AuthContext';
 import { doc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, serverTimestamp, query, where } from 'firebase/firestore';
 import { formatDate, capitalize } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
@@ -16,6 +17,7 @@ export default function Courses() {
     const navigate = useNavigate();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -278,8 +280,8 @@ export default function Courses() {
 
     const canCreateCourse = userData?.role === 'lead' || userData?.type === 'admin' || userData?.type === 'manager';
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="grid" title="Courses" action />;
     }
 
     return (

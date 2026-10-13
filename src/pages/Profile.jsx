@@ -4,7 +4,8 @@ import { db, auth } from '../contexts/AuthContext';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { capitalize } from '../utils/helpers';
-import LoadingOverlay from '../components/LoadingOverlay';
+import { PageSkeleton } from '../components/Loading';
+import { useLoadPhase } from '../hooks/useLoading';
 import Modal, { ModalHeader, ModalBody, ModalFooter } from '../components/Modal';
 import { useToast } from '../components/Toast';
 import '../css/profile.css';
@@ -14,6 +15,7 @@ export default function Profile() {
     const { user, userData } = useAuth();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
+    const { isInitial } = useLoadPhase(loading);
     const [profileData, setProfileData] = useState(null);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [passwordForm, setPasswordForm] = useState({
@@ -133,8 +135,8 @@ export default function Profile() {
         }
     };
 
-    if (loading) {
-        return <LoadingOverlay show={true} />;
+    if (isInitial) {
+        return <PageSkeleton variant="profile" title="Profile Information" />;
     }
 
     if (!profileData) {
@@ -356,7 +358,7 @@ export default function Profile() {
                     >
                         Cancel
                     </button>
-                    <button 
+                    <button aria-busy={updatingGoogleScholar} 
                         type="button" 
                         className="btn btn-primary"
                         disabled={updatingGoogleScholar}

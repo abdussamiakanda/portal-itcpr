@@ -13,6 +13,16 @@ export default function Modal({ isOpen, onClose, children, size = 'default', cla
         };
     }, [isOpen]);
 
+    // Close on Escape when the modal is dismissible
+    useEffect(() => {
+        if (!isOpen || !onClose) return;
+        const handleKey = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     const sizeClass = {
@@ -30,6 +40,8 @@ export default function Modal({ isOpen, onClose, children, size = 'default', cla
                 id="managementModal" 
                 className={modalClass}
                 style={sizeClass}
+                role="dialog"
+                aria-modal="true"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="modal-content">
@@ -45,8 +57,8 @@ export function ModalHeader({ children, onClose }) {
         <div className="modal-header">
             {children}
             {onClose && (
-                <button className="btn-close" onClick={onClose}>
-                    <span className="material-icons">close</span>
+                <button type="button" className="btn-close" onClick={onClose} aria-label="Close dialog">
+                    <span className="material-icons" aria-hidden="true">close</span>
                 </button>
             )}
         </div>

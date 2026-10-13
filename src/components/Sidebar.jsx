@@ -53,34 +53,34 @@ export default function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse
 
     const handleMouseEnter = (e) => {
         if (!isCollapsed) return;
-        const menuItem = e.currentTarget;
-        const rect = menuItem.getBoundingClientRect();
-        const tooltip = menuItem.querySelector('::after');
-        if (menuItem) {
-            const top = rect.top + rect.height / 2;
-            menuItem.style.setProperty('--tooltip-top', `${top}px`);
-        }
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty('--tooltip-top', `${rect.top + rect.height / 2}px`);
     };
 
     return (
         <aside className={`sidebar ${isOpen ? 'active' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
-            <div className="sidebar-content">
+            <nav className="sidebar-content" aria-label="Main navigation">
+                <div className="sidebar-section-label" aria-hidden="true">Workspace</div>
                 <ul className="sidebar-menu" id="sidebarMenu">
-                    {menuItems.map((item) => (
+                    {menuItems.map((item, index) => (
                         <li 
                             key={item.path} 
                             className={`menu-item ${isActive(item.path) ? 'active' : ''}`}
+                            style={{ '--i': index }}
                             data-tooltip={isCollapsed ? item.label : ''}
                             onMouseEnter={handleMouseEnter}
                         >
                             <a 
-                                href={item.external ? item.path : '#'} 
+                                href={item.path} 
+                                aria-current={isActive(item.path) ? 'page' : undefined}
+                                aria-label={isCollapsed ? item.label : undefined}
                                 onClick={(e) => {
+                                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                                     e.preventDefault();
                                     handleMenuClick(item);
                                 }}
                             >
-                                <span className="material-icons">{item.icon}</span>
+                                <span className="material-icons" aria-hidden="true">{item.icon}</span>
                                 <span className="menu-label">{item.label}</span>
                             </a>
                         </li>
@@ -88,17 +88,18 @@ export default function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse
                 </ul>
                 <div className="sidebar-footer">
                     <button 
+                        type="button"
                         className="sidebar-toggle-btn"
                         onClick={onToggleCollapse}
                         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                     >
-                        <span className="material-icons">
+                        <span className="material-icons" aria-hidden="true">
                             {isCollapsed ? 'chevron_right' : 'chevron_left'}
                         </span>
                         {!isCollapsed && <span className="toggle-text">Collapse</span>}
                     </button>
                 </div>
-            </div>
+            </nav>
         </aside>
     );
 }
